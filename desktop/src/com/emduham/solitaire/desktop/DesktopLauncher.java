@@ -6,7 +6,11 @@ import com.emduham.solitaire.SolitaireApp;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new SolitaireApp(), config);
+		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+		cfg.title = "Solitaire";
+		cfg.width = 1024;
+		cfg.height = 576;
+		cfg.resizable = false;
+		new LwjglApplication(new SolitaireApp(), cfg);
 	}
 }
