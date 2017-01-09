@@ -1,0 +1,411 @@
+
+resizedcarddeck.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back
+  rotate: false
+  xy: 1, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 1
+back
+  rotate: false
+  xy: 1, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 2
+back
+  rotate: false
+  xy: 118, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 3
+back
+  rotate: false
+  xy: 1, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 4
+back
+  rotate: false
+  xy: 118, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 5
+back
+  rotate: false
+  xy: 235, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 6
+clubs
+  rotate: false
+  xy: 1, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 1
+clubs
+  rotate: false
+  xy: 118, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 2
+clubs
+  rotate: false
+  xy: 235, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 3
+clubs
+  rotate: false
+  xy: 352, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 4
+clubs
+  rotate: false
+  xy: 1, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 5
+clubs
+  rotate: false
+  xy: 118, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 6
+clubs
+  rotate: false
+  xy: 235, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 7
+clubs
+  rotate: false
+  xy: 352, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 8
+clubs
+  rotate: false
+  xy: 469, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 9
+clubs
+  rotate: false
+  xy: 1, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 10
+clubs
+  rotate: false
+  xy: 118, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 11
+clubs
+  rotate: false
+  xy: 235, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 12
+clubs
+  rotate: false
+  xy: 352, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 13
+diamonds
+  rotate: false
+  xy: 469, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 1
+diamonds
+  rotate: false
+  xy: 586, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 2
+diamonds
+  rotate: false
+  xy: 118, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 3
+diamonds
+  rotate: false
+  xy: 235, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 4
+diamonds
+  rotate: false
+  xy: 352, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 5
+diamonds
+  rotate: false
+  xy: 469, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 6
+diamonds
+  rotate: false
+  xy: 586, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 7
+diamonds
+  rotate: false
+  xy: 703, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 8
+diamonds
+  rotate: false
+  xy: 235, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 9
+diamonds
+  rotate: false
+  xy: 352, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 10
+diamonds
+  rotate: false
+  xy: 469, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 11
+diamonds
+  rotate: false
+  xy: 586, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 12
+diamonds
+  rotate: false
+  xy: 703, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 13
+hearts
+  rotate: false
+  xy: 820, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 1
+hearts
+  rotate: false
+  xy: 352, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 2
+hearts
+  rotate: false
+  xy: 469, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 3
+hearts
+  rotate: false
+  xy: 586, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 4
+hearts
+  rotate: false
+  xy: 703, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 5
+hearts
+  rotate: false
+  xy: 820, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 6
+hearts
+  rotate: false
+  xy: 937, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 7
+hearts
+  rotate: false
+  xy: 469, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 8
+hearts
+  rotate: false
+  xy: 586, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 9
+hearts
+  rotate: false
+  xy: 703, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 10
+hearts
+  rotate: false
+  xy: 820, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 11
+hearts
+  rotate: false
+  xy: 937, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 12
+hearts
+  rotate: false
+  xy: 1054, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 13
+spades
+  rotate: false
+  xy: 586, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 1
+spades
+  rotate: false
+  xy: 703, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 2
+spades
+  rotate: false
+  xy: 820, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 3
+spades
+  rotate: false
+  xy: 937, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 4
+spades
+  rotate: false
+  xy: 1054, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 5
+spades
+  rotate: false
+  xy: 1171, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 6
+spades
+  rotate: false
+  xy: 703, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 7
+spades
+  rotate: false
+  xy: 820, 162
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 8
+spades
+  rotate: false
+  xy: 937, 323
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 9
+spades
+  rotate: false
+  xy: 1054, 484
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 10
+spades
+  rotate: false
+  xy: 1171, 645
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 11
+spades
+  rotate: false
+  xy: 1288, 806
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 12
+spades
+  rotate: false
+  xy: 820, 1
+  size: 115, 159
+  orig: 115, 159
+  offset: 0, 0
+  index: 13

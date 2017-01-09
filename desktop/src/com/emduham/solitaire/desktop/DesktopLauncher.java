@@ -8,8 +8,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Solitaire";
-		cfg.width = 1024;
-		cfg.height = 576;
+		cfg.width = 1280;
+		cfg.height = cfg.width/16*9;
 		cfg.resizable = false;
 		new LwjglApplication(new SolitaireApp(), cfg);
 	}
