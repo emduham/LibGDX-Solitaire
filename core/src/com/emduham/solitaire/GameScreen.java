@@ -154,14 +154,6 @@ public class GameScreen implements Screen {
             xPos += 125f;
         }
         game.getBatch().end();
-
-        shapeRenderer.setProjectionMatrix(game.getCamera().combined);
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.setColor(1f, 0f, 0f, 0.5f);
-        shapeRenderer.begin();
-        Rectangle stock = getBounds(CardPosition.STOCK);
-        shapeRenderer.rect(stock.getX(), stock.getY(), stock.getWidth(), stock.getHeight());
-        shapeRenderer.end();
     }
 
     @Override
