@@ -1,0 +1,64 @@
+package com.emduham.solitaire;
+
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+
+/**
+ * Created by Evan on 2017-01-10.
+ */
+public class InputHandler implements InputProcessor {
+    private GameScreen gameScreen;
+
+    public InputHandler(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if(button != Input.Buttons.LEFT || pointer > 0) {return false;}
+
+        float x = (float) screenX;
+        float y = (float) (720 - screenY);
+
+        if(gameScreen.getBounds(CardPosition.STOCK).contains(x, y)) {
+            gameScreen.discard3();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
+}
