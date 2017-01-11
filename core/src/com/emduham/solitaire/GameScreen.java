@@ -184,8 +184,8 @@ public class GameScreen implements Screen {
 
     //TODO Fine tune bounding boxes
     public Rectangle getBounds(CardPosition cardPos) {
-        float cardWidth = 138f;
-        float cardHeight = 185f;
+        float cardWidth = 115f;
+        float cardHeight = 160f;
 
         Rectangle rec = null;
         switch(cardPos) {
@@ -202,7 +202,7 @@ public class GameScreen implements Screen {
                 rec = new Rectangle(1150f, 550f, cardWidth, cardHeight);
                 break;
             case STOCK:
-                rec = new Rectangle(10f, 520f, cardWidth, cardHeight);
+                rec = new Rectangle(10f, 550f, cardWidth, cardHeight);
                 break;
             case DISCARD:
                 if(discard.size() == 1) {
@@ -252,5 +252,9 @@ public class GameScreen implements Screen {
                 stock.get(0).toggleFaceUp();
             }
         }
+    }
+
+    public SolitaireApp getGame() {
+        return game;
     }
 }

@@ -2,6 +2,7 @@ package com.emduham.solitaire;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Evan on 2017-01-10.
@@ -37,10 +38,13 @@ public class InputHandler implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if(button != Input.Buttons.LEFT || pointer > 0) {return false;}
 
-        float x = (float) screenX;
-        float y = (float) (720 - screenY);
+//        float x = (float) screenX;
+//        float y = (float) (720 - screenY);
+        Vector3 vec = new Vector3(screenX, screenY, 0);
 
-        if(gameScreen.getBounds(CardPosition.STOCK).contains(x, y)) {
+        vec = gameScreen.getGame().getCamera().unproject(vec);
+
+        if(gameScreen.getBounds(CardPosition.STOCK).contains(vec.x, vec.y)) {
             gameScreen.discard3();
         }
 
