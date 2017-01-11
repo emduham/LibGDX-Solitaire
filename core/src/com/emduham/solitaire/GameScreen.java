@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +16,8 @@ import java.util.Collections;
  * Created by Evan on 2017-01-08.
  */
 public class GameScreen implements Screen {
+    private static final int BACK = 5;
+
     //game to setScreen(), batch, camera, etc...
     private SolitaireApp game;
 
@@ -33,6 +37,10 @@ public class GameScreen implements Screen {
     //Row Positions
     private ArrayList<Card>[] rows;
 
+    private ArrayList<Card> cardBuffer;
+    private Vector2 cardBufferLocation;
+    private boolean dragging;
+    private CardPosition failedDragPos;
 
     public GameScreen(SolitaireApp game) {
         this.game = game;
@@ -52,21 +60,25 @@ public class GameScreen implements Screen {
         for(int i = 0; i < rows.length; i++) {
             rows[i] = new ArrayList<Card>();
         }
+
+        cardBuffer = new ArrayList<Card>();
+        cardBufferLocation = new Vector2(0f, 0f);
+        dragging = false;
     }
 
     private void initCards() {
         //Create 52 card deck in stock
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", 5), Suit.SPADES, i, false));
+            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", BACK), Suit.SPADES, i, false));
         }
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", 5), Suit.CLUBS, i, false));
+            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", BACK), Suit.CLUBS, i, false));
         }
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", 5), Suit.DIAMONDS, i, false));
+            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", BACK), Suit.DIAMONDS, i, false));
         }
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", 5), Suit.HEARTS, i, false));
+            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", BACK), Suit.HEARTS, i, false));
         }
 
         //Shuffle the stock
@@ -98,6 +110,11 @@ public class GameScreen implements Screen {
         if(!stock.isEmpty()) {
             stock.get(0).getBack().setPosition(10f, 550f);
             stock.get(0).getBack().draw(game.getBatch());
+        } else {
+            Sprite fadedBack = deckImgs.createSprite("back", BACK);
+            fadedBack.setPosition(10f, 550f);
+            fadedBack.setAlpha(0.4f);
+            fadedBack.draw(game.getBatch());
         }
         //Draw Discard
         if(discard.size() == 1) {
@@ -152,6 +169,17 @@ public class GameScreen implements Screen {
                 yPos -= 30f;
             }
             xPos += 125f;
+        }
+        //Draw card buffer
+        if(dragging && !(cardBuffer.isEmpty())) {
+            Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            mousePos = game.getCamera().unproject(mousePos);
+            xPos = mousePos.x - (115f / 2f);
+            float yPos = mousePos.y - 159f;
+            for(Card c : cardBuffer) {
+                c.draw(game.getBatch(), xPos, yPos);
+                yPos -= 30f;
+            }
         }
         game.getBatch().end();
     }
@@ -211,6 +239,8 @@ public class GameScreen implements Screen {
                     rec = new Rectangle(160f, 550f, cardWidth, cardHeight);
                 }  else if(discard.size() > 2) {
                     rec = new Rectangle(185f, 550f, cardWidth, cardHeight);
+                } else {
+                    rec = new Rectangle(0f, 0f, 0f, 0f);
                 }
                 break;
             case ROW1:
@@ -254,7 +284,105 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void replaceBufferAtOld() {
+        switch (failedDragPos) {
+            case DISCARD:
+                discard.addAll(cardBuffer);
+                break;
+            case SPADES:
+                spades.addAll(cardBuffer);
+                break;
+            case CLUBS:
+                clubs.addAll(cardBuffer);
+                break;
+            case HEARTS:
+                hearts.addAll(cardBuffer);
+                break;
+            case DIAMONDS:
+                diamonds.addAll(cardBuffer);
+                break;
+            case ROW1:
+                rows[0].addAll(cardBuffer);
+                break;
+            case ROW2:
+                rows[1].addAll(cardBuffer);
+                break;
+            case ROW3:
+                rows[2].addAll(cardBuffer);
+                break;
+            case ROW4:
+                rows[3].addAll(cardBuffer);
+                break;
+            case ROW5:
+                rows[4].addAll(cardBuffer);
+                break;
+            case ROW6:
+                rows[5].addAll(cardBuffer);
+                break;
+            case ROW7:
+                rows[6].addAll(cardBuffer);
+                break;
+            default:
+                break;
+        }
+        failedDragPos = null;
+        cardBuffer.clear();
+    }
+
     public SolitaireApp getGame() {
         return game;
+    }
+
+    public ArrayList<Card> getCardBuffer() {
+        return cardBuffer;
+    }
+
+    public ArrayList<Card> getDiscard() {
+        return discard;
+    }
+
+    public ArrayList<Card> getSpades() {
+        return spades;
+    }
+
+    public ArrayList<Card> getClubs() {
+        return clubs;
+    }
+
+    public ArrayList<Card> getDiamonds() {
+        return diamonds;
+    }
+
+    public ArrayList<Card> getHearts() {
+        return hearts;
+    }
+
+    public ArrayList<Card>[] getRows() {
+        return rows;
+    }
+
+    public boolean getDragging() {
+        return dragging;
+    }
+
+    public void setCardBufferLocation(float x, float y) {
+        cardBufferLocation.set(x, y);
+    }
+
+    public void setFailedDragPos(CardPosition failedDragPos) {
+        this.failedDragPos = failedDragPos;
+    }
+
+    public void startDragDiscard() {
+        dragging = true;
+
+        cardBuffer.add(discard.remove(discard.size() - 1));
+    }
+
+    public void stopDragging() {
+        dragging = false;
+
+        //TODO Temp debug code
+        replaceBufferAtOld();
     }
 }

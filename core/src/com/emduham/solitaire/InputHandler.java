@@ -31,6 +31,21 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(button != Input.Buttons.LEFT || pointer > 0) {return false;}
+
+        Vector3 vec = new Vector3(screenX, screenY, 0);
+
+        vec = gameScreen.getGame().getCamera().unproject(vec);
+
+        gameScreen.getBounds(CardPosition.DISCARD);
+
+        //If click on discard, start dragging top discard card
+        if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.DISCARD).contains(vec.x, vec.y)) {
+            gameScreen.setFailedDragPos(CardPosition.DISCARD);
+            gameScreen.startDragDiscard();
+            return true;
+        }
+
         return false;
     }
 
@@ -38,14 +53,17 @@ public class InputHandler implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if(button != Input.Buttons.LEFT || pointer > 0) {return false;}
 
-//        float x = (float) screenX;
-//        float y = (float) (720 - screenY);
         Vector3 vec = new Vector3(screenX, screenY, 0);
 
         vec = gameScreen.getGame().getCamera().unproject(vec);
 
+        //Flip 3 cards from stock, or replenish stock
         if(gameScreen.getBounds(CardPosition.STOCK).contains(vec.x, vec.y)) {
             gameScreen.discard3();
+        }
+
+        if(gameScreen.getDragging()) {
+            gameScreen.stopDragging();
         }
 
         return true;
@@ -53,7 +71,17 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        if(pointer > 0) {
+            return false;
+        }
+
+        Vector3 vec = new Vector3(screenX, screenY, 0);
+
+        vec = gameScreen.getGame().getCamera().unproject(vec);
+
+        gameScreen.setCardBufferLocation(vec.x, vec.y);
+
+        return true;
     }
 
     @Override
