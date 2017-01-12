@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Scaling;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Evan on 2017-01-08.
@@ -165,9 +166,16 @@ public class GameScreen implements Screen {
         float xPos = 100f;
         for(int i = 0; i < rows.length; i++) {
             float yPos = 375f;
-            for(Card c : rows[i]) {
-                c.draw(game.getBatch(), xPos, yPos);
-                yPos -= 30f;
+            if(!(rows[i].isEmpty())) {
+                for (Card c : rows[i]) {
+                    c.draw(game.getBatch(), xPos, yPos);
+                    yPos -= 30f;
+                }
+            } else {
+                Sprite fadedBackRow = deckImgs.createSprite("back", BACK);
+                fadedBackRow.setAlpha(0.5f);
+                fadedBackRow.setPosition(xPos, yPos);
+                fadedBackRow.draw(game.getBatch());
             }
             xPos += 125f;
         }
@@ -572,5 +580,99 @@ public class GameScreen implements Screen {
                 return;
             }
         }
+    }
+
+    public void startDragRow(CardPosition row, int index) {
+        List<Card> tempList = null;
+
+        switch(row) {
+            case ROW1:
+                if(rows[0].get(index).isFaceUp()) {
+                    tempList = rows[0].subList(index, rows[0].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+            case ROW2:
+                if(rows[1].get(index).isFaceUp()) {
+                    tempList = rows[1].subList(index, rows[1].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+            case ROW3:
+                if(rows[2].get(index).isFaceUp()) {
+                    tempList = rows[2].subList(index, rows[2].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+            case ROW4:
+                if(rows[3].get(index).isFaceUp()) {
+                    tempList = rows[3].subList(index, rows[3].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+            case ROW5:
+                if(rows[4].get(index).isFaceUp()) {
+                    tempList = rows[4].subList(index, rows[4].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+            case ROW6:
+                if(rows[5].get(index).isFaceUp()) {
+                    tempList = rows[5].subList(index, rows[5].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+            case ROW7:
+                if(rows[6].get(index).isFaceUp()) {
+                    tempList = rows[6].subList(index, rows[6].size());
+                    cardBuffer.addAll(tempList);
+                    tempList.clear();
+                } else {
+                    return;
+                }
+                break;
+        }
+        dragging = true;
+    }
+
+    public void flipLastRowCards() {
+        for(int i = 0; i < rows.length; i++) {
+            if(!(rows[i].isEmpty())) {
+                if (!(rows[i].get(rows[i].size() - 1).isFaceUp())) {
+                    rows[i].get(rows[i].size() - 1).toggleFaceUp();
+                }
+            }
+        }
+    }
+
+    public boolean isFinished() {
+        if(hearts.size() == 13) {
+            if(diamonds.size() == 13) {
+                if(spades.size() == 13) {
+                    if(clubs.size() == 13) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

@@ -50,4 +50,8 @@ public class Card {
     public Suit getSuit() {
         return suit;
     }
+
+    public boolean isFaceUp() {
+        return faceUp;
+    }
 }
