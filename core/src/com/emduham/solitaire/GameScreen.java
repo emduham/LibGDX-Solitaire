@@ -244,27 +244,28 @@ public class GameScreen implements Screen {
                     rec = new Rectangle(0f, 0f, 0f, 0f);
                 }
                 break;
-            //For the rows, return the entire area the row could take, not necessarily the actual size
+            //height = ((rows[i].size() - 1) * 30) + 159f
+            //y = 185 - ((rows[i].size() - 1) * 30) + 159f + 30f
             case ROW1:
-                rec = new Rectangle(100f, 0f, cardWidth, 535f);
+                rec = new Rectangle(100f, 185 - ((rows[0].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[0].size() - 1) * 30) + 159f);
                 break;
             case ROW2:
-                rec = new Rectangle(225f, 0f, cardWidth, 535f);
+                rec = new Rectangle(225f, 185 - ((rows[1].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[1].size() - 1) * 30) + 159f);
                 break;
             case ROW3:
-                rec = new Rectangle(350f, 0f, cardWidth, 535f);
+                rec = new Rectangle(350f, 185 - ((rows[2].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[2].size() - 1) * 30) + 159f);
                 break;
             case ROW4:
-                rec = new Rectangle(475f, 0f, cardWidth, 535f);
+                rec = new Rectangle(475f, 185 - ((rows[3].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[3].size() - 1) * 30) + 159f);
                 break;
             case ROW5:
-                rec = new Rectangle(600f, 0f, cardWidth, 535f);
+                rec = new Rectangle(600f, 185 - ((rows[4].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[4].size() - 1) * 30) + 159f);
                 break;
             case ROW6:
-                rec = new Rectangle(725f, 0f, cardWidth, 535f);
+                rec = new Rectangle(725f, 185 - ((rows[5].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[5].size() - 1) * 30) + 159f);
                 break;
             case ROW7:
-                rec = new Rectangle(850f, 0f, cardWidth, 535f);
+                rec = new Rectangle(850f, 185 - ((rows[6].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[6].size() - 1) * 30) + 159f);
                 break;
         }
         return rec;
@@ -546,6 +547,30 @@ public class GameScreen implements Screen {
     }
 
     private void validRow(int index) {
-        //TODO
+        if(cardBuffer.size() > 1) {
+            for (int i = 1; i < cardBuffer.size(); i++) {
+                if (!isValid(cardBuffer.get(i - 1), cardBuffer.get(i))) {
+                    replaceBufferAtOld();
+                    return;
+                }
+            }
+        }
+        if(rows[index].isEmpty()) {
+            if(cardBuffer.get(0).getRank() == 13) {
+                rows[index].addAll(cardBuffer);
+                cardBuffer.clear();
+            } else {
+                replaceBufferAtOld();
+                return;
+            }
+        } else {
+            if(isValid(rows[index].get(rows[index].size() - 1), cardBuffer.get(0))) {
+                rows[index].addAll(cardBuffer);
+                cardBuffer.clear();
+            } else {
+                replaceBufferAtOld();
+                return;
+            }
+        }
     }
 }
