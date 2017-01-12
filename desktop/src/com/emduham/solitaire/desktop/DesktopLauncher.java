@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		cfg.title = "Solitaire";
 		cfg.width = (int)(LwjglApplicationConfiguration.getDesktopDisplayMode().width * 0.8);
 		cfg.height = cfg.width/16*9;
-		cfg.resizable = false;
+		cfg.resizable = true;
 		new LwjglApplication(new SolitaireApp(), cfg);
 	}
 }

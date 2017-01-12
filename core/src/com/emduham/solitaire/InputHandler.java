@@ -35,7 +35,7 @@ public class InputHandler implements InputProcessor {
 
         Vector3 vec = new Vector3(screenX, screenY, 0);
 
-        vec = gameScreen.getGame().getCamera().unproject(vec);
+        vec = gameScreen.getGame().getCamera().unproject(vec, gameScreen.getGame().getViewport().getScreenX(), gameScreen.getGame().getViewport().getScreenY(), gameScreen.getGame().getViewport().getScreenWidth(), gameScreen.getGame().getViewport().getScreenHeight());
 
         gameScreen.getBounds(CardPosition.DISCARD);
 
@@ -55,7 +55,7 @@ public class InputHandler implements InputProcessor {
 
         Vector3 vec = new Vector3(screenX, screenY, 0);
 
-        vec = gameScreen.getGame().getCamera().unproject(vec);
+        vec = gameScreen.getGame().getCamera().unproject(vec, gameScreen.getGame().getViewport().getScreenX(), gameScreen.getGame().getViewport().getScreenY(), gameScreen.getGame().getViewport().getScreenWidth(), gameScreen.getGame().getViewport().getScreenHeight());
 
         //Flip 3 cards from stock, or replenish stock
         if(gameScreen.getBounds(CardPosition.STOCK).contains(vec.x, vec.y)) {
@@ -63,7 +63,7 @@ public class InputHandler implements InputProcessor {
         }
 
         if(gameScreen.getDragging()) {
-            gameScreen.stopDragging();
+            gameScreen.stopDragging(vec.x, vec.y);
         }
 
         return true;
@@ -77,7 +77,7 @@ public class InputHandler implements InputProcessor {
 
         Vector3 vec = new Vector3(screenX, screenY, 0);
 
-        vec = gameScreen.getGame().getCamera().unproject(vec);
+        vec = gameScreen.getGame().getCamera().unproject(vec, gameScreen.getGame().getViewport().getScreenX(), gameScreen.getGame().getViewport().getScreenY(), gameScreen.getGame().getViewport().getScreenWidth(), gameScreen.getGame().getViewport().getScreenHeight());
 
         gameScreen.setCardBufferLocation(vec.x, vec.y);
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Scaling;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -173,7 +174,7 @@ public class GameScreen implements Screen {
         //Draw card buffer
         if(dragging && !(cardBuffer.isEmpty())) {
             Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            mousePos = game.getCamera().unproject(mousePos);
+            mousePos = game.getCamera().unproject(mousePos, game.getViewport().getScreenX(), game.getViewport().getScreenY(), game.getViewport().getScreenWidth(), game.getViewport().getScreenHeight());
             xPos = mousePos.x - (115f / 2f);
             float yPos = mousePos.y - 159f;
             for(Card c : cardBuffer) {
@@ -186,6 +187,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        game.getViewport().update(width, height);
     }
 
     @Override
@@ -210,7 +212,6 @@ public class GameScreen implements Screen {
         return stock.remove(stock.size()-1);
     }
 
-    //TODO Fine tune bounding boxes
     public Rectangle getBounds(CardPosition cardPos) {
         float cardWidth = 115f;
         float cardHeight = 160f;
@@ -224,7 +225,7 @@ public class GameScreen implements Screen {
                 rec = new Rectangle(850f, 550f, cardWidth, cardHeight);
                 break;
             case HEARTS:
-                rec = new Rectangle(900f, 550f, cardWidth, cardHeight);
+                rec = new Rectangle(1000f, 550f, cardWidth, cardHeight);
                 break;
             case DIAMONDS:
                 rec = new Rectangle(1150f, 550f, cardWidth, cardHeight);
@@ -243,19 +244,27 @@ public class GameScreen implements Screen {
                     rec = new Rectangle(0f, 0f, 0f, 0f);
                 }
                 break;
+            //For the rows, return the entire area the row could take, not necessarily the actual size
             case ROW1:
+                rec = new Rectangle(100f, 0f, cardWidth, 535f);
                 break;
             case ROW2:
+                rec = new Rectangle(225f, 0f, cardWidth, 535f);
                 break;
             case ROW3:
+                rec = new Rectangle(350f, 0f, cardWidth, 535f);
                 break;
             case ROW4:
+                rec = new Rectangle(475f, 0f, cardWidth, 535f);
                 break;
             case ROW5:
+                rec = new Rectangle(600f, 0f, cardWidth, 535f);
                 break;
             case ROW6:
+                rec = new Rectangle(725f, 0f, cardWidth, 535f);
                 break;
             case ROW7:
+                rec = new Rectangle(850f, 0f, cardWidth, 535f);
                 break;
         }
         return rec;
@@ -325,7 +334,7 @@ public class GameScreen implements Screen {
             default:
                 break;
         }
-        failedDragPos = null;
+//        failedDragPos = null;
         cardBuffer.clear();
     }
 
@@ -379,10 +388,164 @@ public class GameScreen implements Screen {
         cardBuffer.add(discard.remove(discard.size() - 1));
     }
 
-    public void stopDragging() {
+    public void stopDragging(float actualX, float actualY) {
         dragging = false;
 
-        //TODO Temp debug code
+        CardPosition droppedOn = null;
+
+        if(getBounds(CardPosition.ROW1).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW1;
+        } else if(getBounds(CardPosition.ROW2).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW2;
+        } else if(getBounds(CardPosition.ROW3).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW3;
+        } else if(getBounds(CardPosition.ROW4).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW4;
+        } else if(getBounds(CardPosition.ROW5).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW5;
+        } else if(getBounds(CardPosition.ROW6).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW6;
+        } else if(getBounds(CardPosition.ROW7).contains(actualX, actualY)) {
+            droppedOn = CardPosition.ROW7;
+        } else if(getBounds(CardPosition.HEARTS).contains(actualX, actualY)) {
+            droppedOn = CardPosition.HEARTS;
+        } else if(getBounds(CardPosition.CLUBS).contains(actualX, actualY)) {
+            droppedOn = CardPosition.CLUBS;
+        } else if(getBounds(CardPosition.SPADES).contains(actualX, actualY)) {
+            droppedOn = CardPosition.SPADES;
+        } else if(getBounds(CardPosition.DIAMONDS).contains(actualX, actualY)) {
+            droppedOn = CardPosition.DIAMONDS;
+        }
+
+        if(droppedOn != null) {
+            switch (droppedOn) {
+                case SPADES:
+                    validFinalPile(CardPosition.SPADES);
+                    break;
+                case CLUBS:
+                    validFinalPile(CardPosition.CLUBS);
+                    break;
+                case HEARTS:
+                    validFinalPile(CardPosition.HEARTS);
+                    break;
+                case DIAMONDS:
+                    validFinalPile(CardPosition.DIAMONDS);
+                    break;
+                case ROW1:
+                    validRow(0);
+                    break;
+                case ROW2:
+                    validRow(1);
+                    break;
+                case ROW3:
+                    validRow(2);
+                    break;
+                case ROW4:
+                    validRow(3);
+                    break;
+                case ROW5:
+                    validRow(4);
+                    break;
+                case ROW6:
+                    validRow(5);
+                    break;
+                case ROW7:
+                    validRow(6);
+                    break;
+                default:
+                    replaceBufferAtOld();
+                    return;
+            }
+        } else {
+            replaceBufferAtOld();
+            return;
+        }
+
+        //If invalid or didn't drop on anything
         replaceBufferAtOld();
+    }
+
+    private boolean isValid(Card above, Card below) {
+        if(above.getRank() == below.getRank() + 1) {
+            switch(above.getSuit()) {
+                case SPADES:
+                case CLUBS:
+                    if(below.getSuit() == Suit.DIAMONDS || below.getSuit() == Suit.HEARTS) {
+                        return true;
+                    }
+                    break;
+                case HEARTS:
+                case DIAMONDS:
+                    if(below.getSuit() == Suit.SPADES || below.getSuit() == Suit.CLUBS) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+        return false;
+    }
+
+    private void validFinalPile(CardPosition pile) {
+        if(cardBuffer.size() == 1) {
+            if(pile == CardPosition.SPADES) {
+                if (cardBuffer.get(0).getSuit() == Suit.SPADES) {
+                    if (cardBuffer.get(0).getRank() == spades.size() + 1) {
+                        spades.add(cardBuffer.get(0));
+                        cardBuffer.clear();
+                    } else {
+                        replaceBufferAtOld();
+                        return;
+                    }
+                } else {
+                    replaceBufferAtOld();
+                    return;
+                }
+            } else if(pile == CardPosition.CLUBS) {
+                if (cardBuffer.get(0).getSuit() == Suit.CLUBS) {
+                    if (cardBuffer.get(0).getRank() == clubs.size() + 1) {
+                        clubs.add(cardBuffer.get(0));
+                        cardBuffer.clear();
+                    } else {
+                        replaceBufferAtOld();
+                        return;
+                    }
+                } else {
+                    replaceBufferAtOld();
+                    return;
+                }
+            } else if(pile == CardPosition.DIAMONDS) {
+                if (cardBuffer.get(0).getSuit() == Suit.DIAMONDS) {
+                    if (cardBuffer.get(0).getRank() == diamonds.size() + 1) {
+                        diamonds.add(cardBuffer.get(0));
+                        cardBuffer.clear();
+                    } else {
+                        replaceBufferAtOld();
+                        return;
+                    }
+                } else {
+                    replaceBufferAtOld();
+                    return;
+                }
+            } else if(pile == CardPosition.HEARTS) {
+                if (cardBuffer.get(0).getSuit() == Suit.HEARTS) {
+                    if (cardBuffer.get(0).getRank() == hearts.size() + 1) {
+                        hearts.add(cardBuffer.get(0));
+                        cardBuffer.clear();
+                    } else {
+                        replaceBufferAtOld();
+                        return;
+                    }
+                } else {
+                    replaceBufferAtOld();
+                    return;
+                }
+            }
+        } else {
+            replaceBufferAtOld();
+        }
+    }
+
+    private void validRow(int index) {
+        //TODO
     }
 }
