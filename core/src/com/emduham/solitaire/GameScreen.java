@@ -17,8 +17,6 @@ import java.util.List;
  * Created by Evan on 2017-01-08.
  */
 public class GameScreen implements Screen {
-    private static final int BACK = 5;
-
     //game to setScreen(), batch, camera, etc...
     private SolitaireApp game;
 
@@ -70,16 +68,16 @@ public class GameScreen implements Screen {
     private void initCards() {
         //Create 52 card deck in stock
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", BACK), Suit.SPADES, i, false));
+            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.SPADES, i, false));
         }
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", BACK), Suit.CLUBS, i, false));
+            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.CLUBS, i, false));
         }
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", BACK), Suit.DIAMONDS, i, false));
+            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.DIAMONDS, i, false));
         }
         for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", BACK), Suit.HEARTS, i, false));
+            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.HEARTS, i, false));
         }
 
         //Shuffle the stock
@@ -112,7 +110,7 @@ public class GameScreen implements Screen {
             stock.get(0).getBack().setPosition(10f, 550f);
             stock.get(0).getBack().draw(game.getBatch());
         } else {
-            Sprite fadedBack = deckImgs.createSprite("back", BACK);
+            Sprite fadedBack = deckImgs.createSprite("back", SolitaireApp.BACK);
             fadedBack.setPosition(10f, 550f);
             fadedBack.setAlpha(0.4f);
             fadedBack.draw(game.getBatch());
@@ -171,7 +169,7 @@ public class GameScreen implements Screen {
                     yPos -= 30f;
                 }
             } else {
-                Sprite fadedBackRow = deckImgs.createSprite("back", BACK);
+                Sprite fadedBackRow = deckImgs.createSprite("back", SolitaireApp.BACK);
                 fadedBackRow.setAlpha(0.5f);
                 fadedBackRow.setPosition(xPos, yPos);
                 fadedBackRow.draw(game.getBatch());

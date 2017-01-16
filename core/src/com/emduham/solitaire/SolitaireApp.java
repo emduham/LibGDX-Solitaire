@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class SolitaireApp extends Game {
+	public static final int BACK = 5;
+
 	private OrthographicCamera camera;
 	private FitViewport viewport;
 	private SpriteBatch batch;
@@ -18,7 +20,7 @@ public class SolitaireApp extends Game {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1280, 720);
 		viewport = new FitViewport(1280, 720, camera);
-		setScreen(new GameScreen(this));
+		setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
