@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 
 /**
  * Created by Evan on 2017-01-10.
@@ -11,8 +12,11 @@ import com.badlogic.gdx.math.Vector3;
 public class InputHandler implements InputProcessor {
     private GameScreen gameScreen;
 
+    private boolean isClick;
+
     public InputHandler(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
+        this.isClick = false;
     }
 
     @Override
@@ -43,12 +47,12 @@ public class InputHandler implements InputProcessor {
 
         vec = gameScreen.getGame().getCamera().unproject(vec, gameScreen.getGame().getViewport().getScreenX(), gameScreen.getGame().getViewport().getScreenY(), gameScreen.getGame().getViewport().getScreenWidth(), gameScreen.getGame().getViewport().getScreenHeight());
 
-        gameScreen.getBounds(CardPosition.DISCARD);
-
         //If click on discard, start dragging top discard card
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.DISCARD).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.DISCARD);
             gameScreen.startDragDiscard();
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -63,6 +67,8 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW1, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -77,6 +83,8 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW2, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -91,6 +99,8 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW3, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -105,6 +115,8 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW4, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -119,6 +131,8 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW5, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -133,6 +147,8 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW6, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
@@ -147,10 +163,23 @@ public class InputHandler implements InputProcessor {
                 currentRec.setPosition(0f, currentRec.getY() - 30f);
             }
             gameScreen.startDragRow(CardPosition.ROW7, index);
+            //Start isClick timer
+            startClickTimer();
             return true;
         }
 
         return false;
+    }
+
+    private void startClickTimer() {
+        //Start isClick timer
+        isClick = true;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                isClick = false;
+            }
+        }, 0.2f);
     }
 
     @Override
@@ -161,13 +190,18 @@ public class InputHandler implements InputProcessor {
 
         vec = gameScreen.getGame().getCamera().unproject(vec, gameScreen.getGame().getViewport().getScreenX(), gameScreen.getGame().getViewport().getScreenY(), gameScreen.getGame().getViewport().getScreenWidth(), gameScreen.getGame().getViewport().getScreenHeight());
 
+        boolean isClick = this.isClick;
+        if(isClick) {
+            gameScreen.handleClick();
+        }
+
         //Flip 3 cards from stock, or replenish stock
         if(gameScreen.getBounds(CardPosition.STOCK).contains(vec.x, vec.y)) {
             gameScreen.discard3();
         }
 
         if(gameScreen.getDragging()) {
-            gameScreen.stopDragging(vec.x, vec.y);
+            gameScreen.stopDragging(vec.x, vec.y, isClick);
             gameScreen.flipLastRowCards();
         }
 
