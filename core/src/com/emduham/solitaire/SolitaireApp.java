@@ -11,66 +11,66 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class SolitaireApp extends Game {
-	static final int BACK = 5;
+    static final int BACK = 5;
 
-	private OrthographicCamera camera;
-	private FitViewport viewport;
-	private SpriteBatch batch;
-	private BitmapFont font48;
-	private BitmapFont font16;
+    private OrthographicCamera camera;
+    private FitViewport viewport;
+    private SpriteBatch batch;
+    private BitmapFont font48;
+    private BitmapFont font16;
 
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1280, 720);
-		viewport = new FitViewport(1280, 720, camera);
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 1280, 720);
+        viewport = new FitViewport(1280, 720, camera);
 
-		//Setup fonts
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("roboto.ttf"));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.borderWidth = 1.5f;
-		parameter.size = 48;
-		font48 = generator.generateFont(parameter);
-		parameter.borderWidth = 0.8f;
-		parameter.size = 16;
-		font16 = generator.generateFont(parameter);
-		generator.dispose();
-		font48.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		font16.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        //Setup fonts
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("roboto.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.borderWidth = 1.5f;
+        parameter.size = 48;
+        font48 = generator.generateFont(parameter);
+        parameter.borderWidth = 0.8f;
+        parameter.size = 16;
+        font16 = generator.generateFont(parameter);
+        generator.dispose();
+        font48.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        font16.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-		setScreen(new MainMenuScreen(this));
-	}
+        setScreen(new MainMenuScreen(this));
+    }
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(75f/255f, 180f/255f, 65f/255f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		super.render();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-	}
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(75f / 255f, 180f / 255f, 65f / 255f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        super.render();
+    }
 
-	OrthographicCamera getCamera() {
-		return camera;
-	}
+    @Override
+    public void dispose() {
+        batch.dispose();
+    }
 
-	SpriteBatch getBatch() {
-		return batch;
-	}
+    OrthographicCamera getCamera() {
+        return camera;
+    }
 
-	FitViewport getViewport() {
-		return viewport;
-	}
+    SpriteBatch getBatch() {
+        return batch;
+    }
 
-	BitmapFont getFont48() {
-		return font48;
-	}
+    FitViewport getViewport() {
+        return viewport;
+    }
 
-	BitmapFont getFont16() {
-		return font16;
-	}
+    BitmapFont getFont48() {
+        return font48;
+    }
+
+    BitmapFont getFont16() {
+        return font16;
+    }
 }

@@ -8,18 +8,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Stores all information used to process and draw cards.
  */
 class Card {
-    private Sprite front;
-    private Sprite back;
-    private int rank;
-    private Suit suit;
+    private final Sprite front;
+    private final Sprite back;
+    private final int rank;
+    private final Suit suit;
     private boolean faceUp;
 
-    Card(Sprite front, Sprite back, Suit suit, int rank, boolean faceUp) {
+    Card(Sprite front, Sprite back, Suit suit, int rank) {
         this.front = front;
         this.back = back;
         this.suit = suit;
         this.rank = rank;
-        this.faceUp = faceUp;
+        this.faceUp = false;
     }
 
     void toggleFaceUp() {
@@ -27,7 +27,7 @@ class Card {
     }
 
     void draw(SpriteBatch batch, float x, float y) {
-        if(faceUp) {
+        if (faceUp) {
             front.setPosition(x, y);
             front.draw(batch);
         } else {

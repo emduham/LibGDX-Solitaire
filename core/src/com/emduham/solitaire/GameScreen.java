@@ -20,28 +20,28 @@ import java.util.List;
  * Manages the table using rules.
  * Passes out input to InputHandler.
  */
-public class GameScreen implements Screen {
+class GameScreen implements Screen {
     //game to setScreen(), batch, camera, etc...
-    private SolitaireApp game;
+    private final SolitaireApp game;
 
     private TextureAtlas deckImgs;
     private ShapeRenderer shapeRenderer;
 
     //Stock Positions
-    private ArrayList<Card> stock;
-    private ArrayList<Card> discard;
+    private final ArrayList<Card> stock;
+    private final ArrayList<Card> discard;
 
     //Final Positions
-    private ArrayList<Card> spades;
-    private ArrayList<Card> clubs;
-    private ArrayList<Card> diamonds;
-    private ArrayList<Card> hearts;
+    private final ArrayList<Card> spades;
+    private final ArrayList<Card> clubs;
+    private final ArrayList<Card> diamonds;
+    private final ArrayList<Card> hearts;
 
     //Row Positions
-    private List<List<Card>> rows;
+    private final List<List<Card>> rows;
 
-    private ArrayList<Card> cardBuffer;
-    private Vector2 cardBufferLocation;
+    private final ArrayList<Card> cardBuffer;
+    private final Vector2 cardBufferLocation;
     private boolean dragging;
     private CardPosition failedDragPos;
 
@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
 
         //Row Positions
         rows = new ArrayList<List<Card>>();
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             rows.add(new ArrayList<Card>());
         }
 
@@ -73,27 +73,27 @@ public class GameScreen implements Screen {
 
     private void initCards() {
         //Create 52 card deck in stock
-        for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.SPADES, i, false));
+        for (int i = 1; i <= 13; i++) {
+            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.SPADES, i));
         }
-        for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.CLUBS, i, false));
+        for (int i = 1; i <= 13; i++) {
+            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.CLUBS, i));
         }
-        for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.DIAMONDS, i, false));
+        for (int i = 1; i <= 13; i++) {
+            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.DIAMONDS, i));
         }
-        for(int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.HEARTS, i, false));
+        for (int i = 1; i <= 13; i++) {
+            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.HEARTS, i));
         }
 
         //Shuffle the stock
         Collections.shuffle(stock);
 
         //Init rows
-        for(int i = 0; i < rows.size(); i++) {
+        for (int i = 0; i < rows.size(); i++) {
             rows.get(i).add(takeTopCard());
             rows.get(i).get(rows.get(i).size() - 1).toggleFaceUp();
-            for(int x = i + 1; x < rows.size(); x++) {
+            for (int x = i + 1; x < rows.size(); x++) {
                 rows.get(x).add(takeTopCard());
             }
         }
@@ -113,7 +113,7 @@ public class GameScreen implements Screen {
         game.getBatch().setProjectionMatrix(game.getCamera().combined);
         game.getBatch().begin();
         //Draw Stock
-        if(!stock.isEmpty()) {
+        if (!stock.isEmpty()) {
             stock.get(0).getBack().setPosition(10f, 550f);
             stock.get(0).getBack().draw(game.getBatch());
         } else {
@@ -123,18 +123,18 @@ public class GameScreen implements Screen {
             fadedBack.draw(game.getBatch());
         }
         //Draw Discard
-        if(discard.size() == 1) {
+        if (discard.size() == 1) {
             discard.get(discard.size() - 1).draw(game.getBatch(), 135f, 550f);
-        } else if(discard.size() == 2) {
+        } else if (discard.size() == 2) {
             discard.get(discard.size() - 2).draw(game.getBatch(), 135f, 550f);
             discard.get(discard.size() - 1).draw(game.getBatch(), 160f, 550f);
-        }  else if(discard.size() > 2) {
+        } else if (discard.size() > 2) {
             discard.get(discard.size() - 3).draw(game.getBatch(), 135f, 550f);
             discard.get(discard.size() - 2).draw(game.getBatch(), 160f, 550f);
             discard.get(discard.size() - 1).draw(game.getBatch(), 185f, 550f);
         }
         //Draw Final Piles
-        if(!spades.isEmpty()) {
+        if (!spades.isEmpty()) {
             spades.get(spades.size() - 1).draw(game.getBatch(), 700f, 550f);
         } else {
             Sprite fadedAce = deckImgs.createSprite("spades", 1);
@@ -142,7 +142,7 @@ public class GameScreen implements Screen {
             fadedAce.setPosition(700f, 550f);
             fadedAce.draw(game.getBatch());
         }
-        if(!clubs.isEmpty()) {
+        if (!clubs.isEmpty()) {
             clubs.get(clubs.size() - 1).draw(game.getBatch(), 850f, 550f);
         } else {
             Sprite fadedAce = deckImgs.createSprite("clubs", 1);
@@ -150,7 +150,7 @@ public class GameScreen implements Screen {
             fadedAce.setPosition(850f, 550f);
             fadedAce.draw(game.getBatch());
         }
-        if(!hearts.isEmpty()) {
+        if (!hearts.isEmpty()) {
             hearts.get(hearts.size() - 1).draw(game.getBatch(), 1000f, 550f);
         } else {
             Sprite fadedAce = deckImgs.createSprite("hearts", 1);
@@ -158,7 +158,7 @@ public class GameScreen implements Screen {
             fadedAce.setPosition(1000f, 550f);
             fadedAce.draw(game.getBatch());
         }
-        if(!diamonds.isEmpty()) {
+        if (!diamonds.isEmpty()) {
             diamonds.get(diamonds.size() - 1).draw(game.getBatch(), 1150f, 550f);
         } else {
             Sprite fadedAce = deckImgs.createSprite("diamonds", 1);
@@ -184,18 +184,18 @@ public class GameScreen implements Screen {
             xPos += 125f;
         }
         //Draw card buffer
-        if(dragging && !(cardBuffer.isEmpty())) {
+        if (dragging && !(cardBuffer.isEmpty())) {
             Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             mousePos = game.getCamera().unproject(mousePos, game.getViewport().getScreenX(), game.getViewport().getScreenY(), game.getViewport().getScreenWidth(), game.getViewport().getScreenHeight());
             xPos = mousePos.x - (115f / 2f);
             float yPos = mousePos.y - 159f;
-            for(Card c : cardBuffer) {
+            for (Card c : cardBuffer) {
                 c.draw(game.getBatch(), xPos, yPos);
                 yPos -= 30f;
             }
         }
         //Draw delta time in seconds
-        float deltaTime = TimeUtils.timeSinceMillis(startMillis)/1000f;
+        float deltaTime = TimeUtils.timeSinceMillis(startMillis) / 1000f;
         game.getFont16().draw(game.getBatch(), "Time: " + deltaTime, 10f, 20f);
         game.getBatch().end();
     }
@@ -224,7 +224,7 @@ public class GameScreen implements Screen {
     }
 
     private Card takeTopCard() {
-        return stock.remove(stock.size()-1);
+        return stock.remove(stock.size() - 1);
     }
 
     Rectangle getBounds(CardPosition cardPos) {
@@ -232,7 +232,7 @@ public class GameScreen implements Screen {
         float cardHeight = 160f;
 
         Rectangle rec = null;
-        switch(cardPos) {
+        switch (cardPos) {
             case SPADES:
                 rec = new Rectangle(700f, 550f, cardWidth, cardHeight);
                 break;
@@ -249,11 +249,11 @@ public class GameScreen implements Screen {
                 rec = new Rectangle(10f, 550f, cardWidth, cardHeight);
                 break;
             case DISCARD:
-                if(discard.size() == 1) {
+                if (discard.size() == 1) {
                     rec = new Rectangle(135f, 550f, cardWidth, cardHeight);
-                } else if(discard.size() == 2) {
+                } else if (discard.size() == 2) {
                     rec = new Rectangle(160f, 550f, cardWidth, cardHeight);
-                }  else if(discard.size() > 2) {
+                } else if (discard.size() > 2) {
                     rec = new Rectangle(185f, 550f, cardWidth, cardHeight);
                 } else {
                     rec = new Rectangle(0f, 0f, 0f, 0f);
@@ -287,13 +287,13 @@ public class GameScreen implements Screen {
     }
 
     void discard3() {
-        if(stock.size() >= 3) {
+        if (stock.size() >= 3) {
             for (int i = 0; i < 3; i++) {
                 Card tempCard = takeTopCard();
                 tempCard.toggleFaceUp();
                 discard.add(tempCard);
             }
-        } else if(stock.size() > 0) {
+        } else if (stock.size() > 0) {
             int toFlip = stock.size();
             for (int i = 0; i < toFlip; i++) {
                 Card tempCard = takeTopCard();
@@ -385,31 +385,31 @@ public class GameScreen implements Screen {
 
         CardPosition droppedOn = null;
 
-        if(getBounds(CardPosition.ROW1).contains(actualX, actualY)) {
+        if (getBounds(CardPosition.ROW1).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW1;
-        } else if(getBounds(CardPosition.ROW2).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.ROW2).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW2;
-        } else if(getBounds(CardPosition.ROW3).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.ROW3).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW3;
-        } else if(getBounds(CardPosition.ROW4).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.ROW4).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW4;
-        } else if(getBounds(CardPosition.ROW5).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.ROW5).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW5;
-        } else if(getBounds(CardPosition.ROW6).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.ROW6).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW6;
-        } else if(getBounds(CardPosition.ROW7).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.ROW7).contains(actualX, actualY)) {
             droppedOn = CardPosition.ROW7;
-        } else if(getBounds(CardPosition.HEARTS).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.HEARTS).contains(actualX, actualY)) {
             droppedOn = CardPosition.HEARTS;
-        } else if(getBounds(CardPosition.CLUBS).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.CLUBS).contains(actualX, actualY)) {
             droppedOn = CardPosition.CLUBS;
-        } else if(getBounds(CardPosition.SPADES).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.SPADES).contains(actualX, actualY)) {
             droppedOn = CardPosition.SPADES;
-        } else if(getBounds(CardPosition.DIAMONDS).contains(actualX, actualY)) {
+        } else if (getBounds(CardPosition.DIAMONDS).contains(actualX, actualY)) {
             droppedOn = CardPosition.DIAMONDS;
         }
 
-        if(droppedOn != null && !isClick) {
+        if (droppedOn != null && !isClick) {
             switch (droppedOn) {
                 case SPADES:
                     validFinalPile(CardPosition.SPADES);
@@ -458,17 +458,17 @@ public class GameScreen implements Screen {
     }
 
     private boolean isValid(Card above, Card below) {
-        if(above.getRank() == below.getRank() + 1) {
-            switch(above.getSuit()) {
+        if (above.getRank() == below.getRank() + 1) {
+            switch (above.getSuit()) {
                 case SPADES:
                 case CLUBS:
-                    if(below.getSuit() == Suit.DIAMONDS || below.getSuit() == Suit.HEARTS) {
+                    if (below.getSuit() == Suit.DIAMONDS || below.getSuit() == Suit.HEARTS) {
                         return true;
                     }
                     break;
                 case HEARTS:
                 case DIAMONDS:
-                    if(below.getSuit() == Suit.SPADES || below.getSuit() == Suit.CLUBS) {
+                    if (below.getSuit() == Suit.SPADES || below.getSuit() == Suit.CLUBS) {
                         return true;
                     }
                     break;
@@ -478,8 +478,8 @@ public class GameScreen implements Screen {
     }
 
     private void validFinalPile(CardPosition pile) {
-        if(cardBuffer.size() == 1) {
-            if(pile == CardPosition.SPADES) {
+        if (cardBuffer.size() == 1) {
+            if (pile == CardPosition.SPADES) {
                 if (cardBuffer.get(0).getSuit() == Suit.SPADES) {
                     if (cardBuffer.get(0).getRank() == spades.size() + 1) {
                         spades.add(cardBuffer.get(0));
@@ -492,7 +492,7 @@ public class GameScreen implements Screen {
                     replaceBufferAtOld();
 //                    return;
                 }
-            } else if(pile == CardPosition.CLUBS) {
+            } else if (pile == CardPosition.CLUBS) {
                 if (cardBuffer.get(0).getSuit() == Suit.CLUBS) {
                     if (cardBuffer.get(0).getRank() == clubs.size() + 1) {
                         clubs.add(cardBuffer.get(0));
@@ -505,7 +505,7 @@ public class GameScreen implements Screen {
                     replaceBufferAtOld();
 //                    return;
                 }
-            } else if(pile == CardPosition.DIAMONDS) {
+            } else if (pile == CardPosition.DIAMONDS) {
                 if (cardBuffer.get(0).getSuit() == Suit.DIAMONDS) {
                     if (cardBuffer.get(0).getRank() == diamonds.size() + 1) {
                         diamonds.add(cardBuffer.get(0));
@@ -518,7 +518,7 @@ public class GameScreen implements Screen {
                     replaceBufferAtOld();
 //                    return;
                 }
-            } else if(pile == CardPosition.HEARTS) {
+            } else if (pile == CardPosition.HEARTS) {
                 if (cardBuffer.get(0).getSuit() == Suit.HEARTS) {
                     if (cardBuffer.get(0).getRank() == hearts.size() + 1) {
                         hearts.add(cardBuffer.get(0));
@@ -538,7 +538,7 @@ public class GameScreen implements Screen {
     }
 
     private void validRow(int index) {
-        if(cardBuffer.size() > 1) {
+        if (cardBuffer.size() > 1) {
             for (int i = 1; i < cardBuffer.size(); i++) {
                 if (!isValid(cardBuffer.get(i - 1), cardBuffer.get(i))) {
                     replaceBufferAtOld();
@@ -546,8 +546,8 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        if(rows.get(index).isEmpty()) {
-            if(cardBuffer.get(0).getRank() == 13) {
+        if (rows.get(index).isEmpty()) {
+            if (cardBuffer.get(0).getRank() == 13) {
                 rows.get(index).addAll(cardBuffer);
                 cardBuffer.clear();
             } else {
@@ -555,7 +555,7 @@ public class GameScreen implements Screen {
 //                return;
             }
         } else {
-            if(isValid(rows.get(index).get(rows.get(index).size() - 1), cardBuffer.get(0))) {
+            if (isValid(rows.get(index).get(rows.get(index).size() - 1), cardBuffer.get(0))) {
                 rows.get(index).addAll(cardBuffer);
                 cardBuffer.clear();
             } else {
@@ -568,9 +568,9 @@ public class GameScreen implements Screen {
     void startDragRow(CardPosition row, int index) {
         List<Card> tempList;
 
-        switch(row) {
+        switch (row) {
             case ROW1:
-                if(!(rows.get(0).isEmpty())) {
+                if (!(rows.get(0).isEmpty())) {
                     if (rows.get(0).get(index).isFaceUp()) {
                         tempList = rows.get(0).subList(index, rows.get(0).size());
                         cardBuffer.addAll(tempList);
@@ -583,7 +583,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW2:
-                if(!(rows.get(1).isEmpty())) {
+                if (!(rows.get(1).isEmpty())) {
                     if (rows.get(1).get(index).isFaceUp()) {
                         tempList = rows.get(1).subList(index, rows.get(1).size());
                         cardBuffer.addAll(tempList);
@@ -596,7 +596,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW3:
-                if(!(rows.get(2).isEmpty())) {
+                if (!(rows.get(2).isEmpty())) {
                     if (rows.get(2).get(index).isFaceUp()) {
                         tempList = rows.get(2).subList(index, rows.get(2).size());
                         cardBuffer.addAll(tempList);
@@ -609,7 +609,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW4:
-                if(!(rows.get(3).isEmpty())) {
+                if (!(rows.get(3).isEmpty())) {
                     if (rows.get(3).get(index).isFaceUp()) {
                         tempList = rows.get(3).subList(index, rows.get(3).size());
                         cardBuffer.addAll(tempList);
@@ -622,7 +622,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW5:
-                if(!(rows.get(4).isEmpty())) {
+                if (!(rows.get(4).isEmpty())) {
                     if (rows.get(4).get(index).isFaceUp()) {
                         tempList = rows.get(4).subList(index, rows.get(4).size());
                         cardBuffer.addAll(tempList);
@@ -635,7 +635,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW6:
-                if(!(rows.get(5).isEmpty())) {
+                if (!(rows.get(5).isEmpty())) {
                     if (rows.get(5).get(index).isFaceUp()) {
                         tempList = rows.get(5).subList(index, rows.get(5).size());
                         cardBuffer.addAll(tempList);
@@ -648,7 +648,7 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW7:
-                if(!(rows.get(6).isEmpty())) {
+                if (!(rows.get(6).isEmpty())) {
                     if (rows.get(6).get(index).isFaceUp()) {
                         tempList = rows.get(6).subList(index, rows.get(6).size());
                         cardBuffer.addAll(tempList);
@@ -675,10 +675,10 @@ public class GameScreen implements Screen {
     }
 
     boolean isFinished() {
-        if(hearts.size() == 13) {
-            if(diamonds.size() == 13) {
-                if(spades.size() == 13) {
-                    if(clubs.size() == 13) {
+        if (hearts.size() == 13) {
+            if (diamonds.size() == 13) {
+                if (spades.size() == 13) {
+                    if (clubs.size() == 13) {
                         return true;
                     }
                 }
@@ -688,7 +688,7 @@ public class GameScreen implements Screen {
     }
 
     void handleClick() {
-        if(!(cardBuffer.isEmpty())) {
+        if (!(cardBuffer.isEmpty())) {
 
             int index = -1;
 
@@ -721,7 +721,7 @@ public class GameScreen implements Screen {
                 }
             }
 
-            switch(failedDragPos) {
+            switch (failedDragPos) {
                 case ROW1:
                     for (int i = 0; i < rows.size(); i++) {
                         if (i != 0) {

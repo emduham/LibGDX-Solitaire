@@ -13,8 +13,8 @@ import com.badlogic.gdx.math.Vector3;
  * Created by Evan on 1/16/2017.
  * Manages Main Menu
  */
-public class MainMenuScreen implements Screen, InputProcessor {
-    private SolitaireApp game;
+class MainMenuScreen implements Screen, InputProcessor {
+    private final SolitaireApp game;
 
     private Sprite back;
 
@@ -85,7 +85,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if(button != Input.Buttons.LEFT || pointer > 0) {
+        if (button != Input.Buttons.LEFT || pointer > 0) {
             return false;
         }
 
@@ -93,7 +93,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         vec = game.getCamera().unproject(vec, game.getViewport().getScreenX(), game.getViewport().getScreenY(), game.getViewport().getScreenWidth(), game.getViewport().getScreenHeight());
 
-        if(new Rectangle(10f, 550f, 115f, 160f).contains(vec.x, vec.y)) {
+        if (new Rectangle(10f, 550f, 115f, 160f).contains(vec.x, vec.y)) {
             game.setScreen(new GameScreen(game));
         }
 
