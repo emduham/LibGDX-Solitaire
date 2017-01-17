@@ -4,15 +4,20 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class SolitaireApp extends Game {
-	public static final int BACK = 5;
+	static final int BACK = 5;
 
 	private OrthographicCamera camera;
 	private FitViewport viewport;
 	private SpriteBatch batch;
+	private BitmapFont font48;
+	private BitmapFont font16;
 
 	@Override
 	public void create () {
@@ -20,6 +25,20 @@ public class SolitaireApp extends Game {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1280, 720);
 		viewport = new FitViewport(1280, 720, camera);
+
+		//Setup fonts
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("roboto.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.borderWidth = 1.5f;
+		parameter.size = 48;
+		font48 = generator.generateFont(parameter);
+		parameter.borderWidth = 0.8f;
+		parameter.size = 16;
+		font16 = generator.generateFont(parameter);
+		generator.dispose();
+		font48.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		font16.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
 		setScreen(new MainMenuScreen(this));
 	}
 
@@ -35,15 +54,23 @@ public class SolitaireApp extends Game {
 		batch.dispose();
 	}
 
-	public OrthographicCamera getCamera() {
+	OrthographicCamera getCamera() {
 		return camera;
 	}
 
-	public SpriteBatch getBatch() {
+	SpriteBatch getBatch() {
 		return batch;
 	}
 
-	public FitViewport getViewport() {
+	FitViewport getViewport() {
 		return viewport;
+	}
+
+	BitmapFont getFont48() {
+		return font48;
+	}
+
+	BitmapFont getFont16() {
+		return font16;
 	}
 }

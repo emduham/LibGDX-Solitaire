@@ -8,13 +8,14 @@ import com.badlogic.gdx.utils.Timer;
 
 /**
  * Created by Evan on 2017-01-10.
+ * Handles input for GameScreen
  */
 public class InputHandler implements InputProcessor {
     private GameScreen gameScreen;
 
     private boolean isClick;
 
-    public InputHandler(GameScreen gameScreen) {
+    InputHandler(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
         this.isClick = false;
     }
@@ -58,9 +59,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW1).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW1);
-            int index = gameScreen.getRows()[0].size()-1;
+            int index = gameScreen.getRows().get(0).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[0].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(0).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }
@@ -74,9 +75,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW2).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW2);
-            int index = gameScreen.getRows()[1].size()-1;
+            int index = gameScreen.getRows().get(1).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[1].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(1).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }
@@ -90,9 +91,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW3).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW3);
-            int index = gameScreen.getRows()[2].size()-1;
+            int index = gameScreen.getRows().get(2).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[2].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(2).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }
@@ -106,9 +107,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW4).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW4);
-            int index = gameScreen.getRows()[3].size()-1;
+            int index = gameScreen.getRows().get(3).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[3].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(3).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }
@@ -122,9 +123,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW5).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW5);
-            int index = gameScreen.getRows()[4].size()-1;
+            int index = gameScreen.getRows().get(4).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[4].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(4).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }
@@ -138,9 +139,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW6).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW6);
-            int index = gameScreen.getRows()[5].size()-1;
+            int index = gameScreen.getRows().get(5).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[5].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(5).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }
@@ -154,9 +155,9 @@ public class InputHandler implements InputProcessor {
 
         if(!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW7).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW7);
-            int index = gameScreen.getRows()[6].size()-1;
+            int index = gameScreen.getRows().get(6).size()-1;
             Rectangle currentRec = new Rectangle(0f, 505f, 1280f, 30f);
-            for(int i = 0; i < gameScreen.getRows()[6].size() - 1; i++) {
+            for(int i = 0; i < gameScreen.getRows().get(6).size() - 1; i++) {
                 if(currentRec.contains(vec.x, vec.y)) {
                     index = i;
                 }

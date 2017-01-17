@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +16,9 @@ import java.util.List;
 
 /**
  * Created by Evan on 2017-01-08.
+ * Most main game functions are located here.
+ * Manages the table using rules.
+ * Passes out input to InputHandler.
  */
 public class GameScreen implements Screen {
     //game to setScreen(), batch, camera, etc...
@@ -34,14 +38,16 @@ public class GameScreen implements Screen {
     private ArrayList<Card> hearts;
 
     //Row Positions
-    private ArrayList<Card>[] rows;
+    private List<List<Card>> rows;
 
     private ArrayList<Card> cardBuffer;
     private Vector2 cardBufferLocation;
     private boolean dragging;
     private CardPosition failedDragPos;
 
-    public GameScreen(SolitaireApp game) {
+    private long startMillis;
+
+    GameScreen(SolitaireApp game) {
         this.game = game;
 
         //Stock Positions
@@ -55,9 +61,9 @@ public class GameScreen implements Screen {
         hearts = new ArrayList<Card>();
 
         //Row Positions
-        rows = new ArrayList[7];
-        for(int i = 0; i < rows.length; i++) {
-            rows[i] = new ArrayList<Card>();
+        rows = new ArrayList<List<Card>>();
+        for(int i = 0; i < 7; i++) {
+            rows.add(new ArrayList<Card>());
         }
 
         cardBuffer = new ArrayList<Card>();
@@ -84,11 +90,11 @@ public class GameScreen implements Screen {
         Collections.shuffle(stock);
 
         //Init rows
-        for(int i = 0; i < rows.length; i++) {
-            rows[i].add(takeTopCard());
-            rows[i].get(rows[i].size() - 1).toggleFaceUp();
-            for(int x = i + 1; x < rows.length; x++) {
-                rows[x].add(takeTopCard());
+        for(int i = 0; i < rows.size(); i++) {
+            rows.get(i).add(takeTopCard());
+            rows.get(i).get(rows.get(i).size() - 1).toggleFaceUp();
+            for(int x = i + 1; x < rows.size(); x++) {
+                rows.get(x).add(takeTopCard());
             }
         }
     }
@@ -99,6 +105,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(new InputHandler(this));
         deckImgs = new TextureAtlas("resizedcarddeck.pack"); //Cards are 115x159
         initCards();
+        startMillis = TimeUtils.millis();
     }
 
     @Override
@@ -161,10 +168,10 @@ public class GameScreen implements Screen {
         }
         //Draw Rows
         float xPos = 100f;
-        for(int i = 0; i < rows.length; i++) {
+        for (List<Card> row : rows) {
             float yPos = 375f;
-            if(!(rows[i].isEmpty())) {
-                for (Card c : rows[i]) {
+            if (!(row.isEmpty())) {
+                for (Card c : row) {
                     c.draw(game.getBatch(), xPos, yPos);
                     yPos -= 30f;
                 }
@@ -187,6 +194,9 @@ public class GameScreen implements Screen {
                 yPos -= 30f;
             }
         }
+        //Draw delta time in seconds
+        float deltaTime = TimeUtils.timeSinceMillis(startMillis)/1000f;
+        game.getFont16().draw(game.getBatch(), "Time: " + deltaTime, 10f, 20f);
         game.getBatch().end();
     }
 
@@ -217,7 +227,7 @@ public class GameScreen implements Screen {
         return stock.remove(stock.size()-1);
     }
 
-    public Rectangle getBounds(CardPosition cardPos) {
+    Rectangle getBounds(CardPosition cardPos) {
         float cardWidth = 115f;
         float cardHeight = 160f;
 
@@ -252,31 +262,31 @@ public class GameScreen implements Screen {
             //height = ((rows[i].size() - 1) * 30) + 159f
             //y = 185 - ((rows[i].size() - 1) * 30) + 159f + 30f
             case ROW1:
-                rec = new Rectangle(100f, 185 - ((rows[0].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[0].size() - 1) * 30) + 159f);
+                rec = new Rectangle(100f, 185 - ((rows.get(0).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(0).size() - 1) * 30) + 159f);
                 break;
             case ROW2:
-                rec = new Rectangle(225f, 185 - ((rows[1].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[1].size() - 1) * 30) + 159f);
+                rec = new Rectangle(225f, 185 - ((rows.get(1).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(1).size() - 1) * 30) + 159f);
                 break;
             case ROW3:
-                rec = new Rectangle(350f, 185 - ((rows[2].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[2].size() - 1) * 30) + 159f);
+                rec = new Rectangle(350f, 185 - ((rows.get(2).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(2).size() - 1) * 30) + 159f);
                 break;
             case ROW4:
-                rec = new Rectangle(475f, 185 - ((rows[3].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[3].size() - 1) * 30) + 159f);
+                rec = new Rectangle(475f, 185 - ((rows.get(3).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(3).size() - 1) * 30) + 159f);
                 break;
             case ROW5:
-                rec = new Rectangle(600f, 185 - ((rows[4].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[4].size() - 1) * 30) + 159f);
+                rec = new Rectangle(600f, 185 - ((rows.get(4).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(4).size() - 1) * 30) + 159f);
                 break;
             case ROW6:
-                rec = new Rectangle(725f, 185 - ((rows[5].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[5].size() - 1) * 30) + 159f);
+                rec = new Rectangle(725f, 185 - ((rows.get(5).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(5).size() - 1) * 30) + 159f);
                 break;
             case ROW7:
-                rec = new Rectangle(850f, 185 - ((rows[6].size() - 1) * 30) + 159f + 30f, cardWidth, ((rows[6].size() - 1) * 30) + 159f);
+                rec = new Rectangle(850f, 185 - ((rows.get(6).size() - 1) * 30) + 159f + 30f, cardWidth, ((rows.get(6).size() - 1) * 30) + 159f);
                 break;
         }
         return rec;
     }
 
-    public void discard3() {
+    void discard3() {
         if(stock.size() >= 3) {
             for (int i = 0; i < 3; i++) {
                 Card tempCard = takeTopCard();
@@ -317,25 +327,25 @@ public class GameScreen implements Screen {
                 diamonds.addAll(cardBuffer);
                 break;
             case ROW1:
-                rows[0].addAll(cardBuffer);
+                rows.get(0).addAll(cardBuffer);
                 break;
             case ROW2:
-                rows[1].addAll(cardBuffer);
+                rows.get(1).addAll(cardBuffer);
                 break;
             case ROW3:
-                rows[2].addAll(cardBuffer);
+                rows.get(2).addAll(cardBuffer);
                 break;
             case ROW4:
-                rows[3].addAll(cardBuffer);
+                rows.get(3).addAll(cardBuffer);
                 break;
             case ROW5:
-                rows[4].addAll(cardBuffer);
+                rows.get(4).addAll(cardBuffer);
                 break;
             case ROW6:
-                rows[5].addAll(cardBuffer);
+                rows.get(5).addAll(cardBuffer);
                 break;
             case ROW7:
-                rows[6].addAll(cardBuffer);
+                rows.get(6).addAll(cardBuffer);
                 break;
             default:
                 break;
@@ -344,57 +354,33 @@ public class GameScreen implements Screen {
         cardBuffer.clear();
     }
 
-    public SolitaireApp getGame() {
+    SolitaireApp getGame() {
         return game;
     }
 
-    public ArrayList<Card> getCardBuffer() {
-        return cardBuffer;
-    }
-
-    public ArrayList<Card> getDiscard() {
-        return discard;
-    }
-
-    public ArrayList<Card> getSpades() {
-        return spades;
-    }
-
-    public ArrayList<Card> getClubs() {
-        return clubs;
-    }
-
-    public ArrayList<Card> getDiamonds() {
-        return diamonds;
-    }
-
-    public ArrayList<Card> getHearts() {
-        return hearts;
-    }
-
-    public ArrayList<Card>[] getRows() {
+    List<List<Card>> getRows() {
         return rows;
     }
 
-    public boolean getDragging() {
+    boolean getDragging() {
         return dragging;
     }
 
-    public void setCardBufferLocation(float x, float y) {
+    void setCardBufferLocation(float x, float y) {
         cardBufferLocation.set(x, y);
     }
 
-    public void setFailedDragPos(CardPosition failedDragPos) {
+    void setFailedDragPos(CardPosition failedDragPos) {
         this.failedDragPos = failedDragPos;
     }
 
-    public void startDragDiscard() {
+    void startDragDiscard() {
         dragging = true;
 
         cardBuffer.add(discard.remove(discard.size() - 1));
     }
 
-    public void stopDragging(float actualX, float actualY, boolean isClick) {
+    void stopDragging(float actualX, float actualY, boolean isClick) {
         dragging = false;
 
         CardPosition droppedOn = null;
@@ -500,11 +486,11 @@ public class GameScreen implements Screen {
                         cardBuffer.clear();
                     } else {
                         replaceBufferAtOld();
-                        return;
+//                        return;
                     }
                 } else {
                     replaceBufferAtOld();
-                    return;
+//                    return;
                 }
             } else if(pile == CardPosition.CLUBS) {
                 if (cardBuffer.get(0).getSuit() == Suit.CLUBS) {
@@ -513,11 +499,11 @@ public class GameScreen implements Screen {
                         cardBuffer.clear();
                     } else {
                         replaceBufferAtOld();
-                        return;
+//                        return;
                     }
                 } else {
                     replaceBufferAtOld();
-                    return;
+//                    return;
                 }
             } else if(pile == CardPosition.DIAMONDS) {
                 if (cardBuffer.get(0).getSuit() == Suit.DIAMONDS) {
@@ -526,11 +512,11 @@ public class GameScreen implements Screen {
                         cardBuffer.clear();
                     } else {
                         replaceBufferAtOld();
-                        return;
+//                        return;
                     }
                 } else {
                     replaceBufferAtOld();
-                    return;
+//                    return;
                 }
             } else if(pile == CardPosition.HEARTS) {
                 if (cardBuffer.get(0).getSuit() == Suit.HEARTS) {
@@ -539,11 +525,11 @@ public class GameScreen implements Screen {
                         cardBuffer.clear();
                     } else {
                         replaceBufferAtOld();
-                        return;
+//                        return;
                     }
                 } else {
                     replaceBufferAtOld();
-                    return;
+//                    return;
                 }
             }
         } else {
@@ -560,33 +546,33 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        if(rows[index].isEmpty()) {
+        if(rows.get(index).isEmpty()) {
             if(cardBuffer.get(0).getRank() == 13) {
-                rows[index].addAll(cardBuffer);
+                rows.get(index).addAll(cardBuffer);
                 cardBuffer.clear();
             } else {
                 replaceBufferAtOld();
-                return;
+//                return;
             }
         } else {
-            if(isValid(rows[index].get(rows[index].size() - 1), cardBuffer.get(0))) {
-                rows[index].addAll(cardBuffer);
+            if(isValid(rows.get(index).get(rows.get(index).size() - 1), cardBuffer.get(0))) {
+                rows.get(index).addAll(cardBuffer);
                 cardBuffer.clear();
             } else {
                 replaceBufferAtOld();
-                return;
+//                return;
             }
         }
     }
 
-    public void startDragRow(CardPosition row, int index) {
-        List<Card> tempList = null;
+    void startDragRow(CardPosition row, int index) {
+        List<Card> tempList;
 
         switch(row) {
             case ROW1:
-                if(!(rows[0].isEmpty())) {
-                    if (rows[0].get(index).isFaceUp()) {
-                        tempList = rows[0].subList(index, rows[0].size());
+                if(!(rows.get(0).isEmpty())) {
+                    if (rows.get(0).get(index).isFaceUp()) {
+                        tempList = rows.get(0).subList(index, rows.get(0).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -597,9 +583,9 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW2:
-                if(!(rows[1].isEmpty())) {
-                    if (rows[1].get(index).isFaceUp()) {
-                        tempList = rows[1].subList(index, rows[1].size());
+                if(!(rows.get(1).isEmpty())) {
+                    if (rows.get(1).get(index).isFaceUp()) {
+                        tempList = rows.get(1).subList(index, rows.get(1).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -610,9 +596,9 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW3:
-                if(!(rows[2].isEmpty())) {
-                    if (rows[2].get(index).isFaceUp()) {
-                        tempList = rows[2].subList(index, rows[2].size());
+                if(!(rows.get(2).isEmpty())) {
+                    if (rows.get(2).get(index).isFaceUp()) {
+                        tempList = rows.get(2).subList(index, rows.get(2).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -623,9 +609,9 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW4:
-                if(!(rows[3].isEmpty())) {
-                    if (rows[3].get(index).isFaceUp()) {
-                        tempList = rows[3].subList(index, rows[3].size());
+                if(!(rows.get(3).isEmpty())) {
+                    if (rows.get(3).get(index).isFaceUp()) {
+                        tempList = rows.get(3).subList(index, rows.get(3).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -636,9 +622,9 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW5:
-                if(!(rows[4].isEmpty())) {
-                    if (rows[4].get(index).isFaceUp()) {
-                        tempList = rows[4].subList(index, rows[4].size());
+                if(!(rows.get(4).isEmpty())) {
+                    if (rows.get(4).get(index).isFaceUp()) {
+                        tempList = rows.get(4).subList(index, rows.get(4).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -649,9 +635,9 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW6:
-                if(!(rows[5].isEmpty())) {
-                    if (rows[5].get(index).isFaceUp()) {
-                        tempList = rows[5].subList(index, rows[5].size());
+                if(!(rows.get(5).isEmpty())) {
+                    if (rows.get(5).get(index).isFaceUp()) {
+                        tempList = rows.get(5).subList(index, rows.get(5).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -662,9 +648,9 @@ public class GameScreen implements Screen {
                 }
                 break;
             case ROW7:
-                if(!(rows[6].isEmpty())) {
-                    if (rows[6].get(index).isFaceUp()) {
-                        tempList = rows[6].subList(index, rows[6].size());
+                if(!(rows.get(6).isEmpty())) {
+                    if (rows.get(6).get(index).isFaceUp()) {
+                        tempList = rows.get(6).subList(index, rows.get(6).size());
                         cardBuffer.addAll(tempList);
                         tempList.clear();
                     } else {
@@ -678,17 +664,17 @@ public class GameScreen implements Screen {
         dragging = true;
     }
 
-    public void flipLastRowCards() {
-        for(int i = 0; i < rows.length; i++) {
-            if(!(rows[i].isEmpty())) {
-                if (!(rows[i].get(rows[i].size() - 1).isFaceUp())) {
-                    rows[i].get(rows[i].size() - 1).toggleFaceUp();
+    void flipLastRowCards() {
+        for (List<Card> row : rows) {
+            if (!(row.isEmpty())) {
+                if (!(row.get(row.size() - 1).isFaceUp())) {
+                    row.get(row.size() - 1).toggleFaceUp();
                 }
             }
         }
     }
 
-    public boolean isFinished() {
+    boolean isFinished() {
         if(hearts.size() == 13) {
             if(diamonds.size() == 13) {
                 if(spades.size() == 13) {
@@ -701,7 +687,7 @@ public class GameScreen implements Screen {
         return false;
     }
 
-    public void handleClick() {
+    void handleClick() {
         if(!(cardBuffer.isEmpty())) {
 
             int index = -1;
@@ -735,23 +721,121 @@ public class GameScreen implements Screen {
                 }
             }
 
-            for (int i = 0; i < rows.length; i++) {
-                if (!(rows[i].isEmpty())) {
-                    if (isValid(rows[i].get(rows[i].size() - 1), cardBuffer.get(0))) {
-                        index = i;
+            switch(failedDragPos) {
+                case ROW1:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 0) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
                     }
-                } else {
-                    if (cardBuffer.get(0).getRank() == 13) {
-                        index = i;
+                    break;
+                case ROW2:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 1) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
                     }
-                }
+                    break;
+                case ROW3:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 2) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ROW4:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 3) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ROW5:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 4) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ROW6:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 5) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ROW7:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (i != 6) {
+                            if (!(rows.get(i).isEmpty())) {
+                                if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                    index = i;
+                                }
+                            } else {
+                                if (cardBuffer.get(0).getRank() == 13) {
+                                    index = i;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
 
             if (index == -1) {
                 return;
             }
 
-            rows[index].addAll(cardBuffer);
+            rows.get(index).addAll(cardBuffer);
             cardBuffer.clear();
         }
     }

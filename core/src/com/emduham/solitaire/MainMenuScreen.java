@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,13 +11,14 @@ import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Evan on 1/16/2017.
+ * Manages Main Menu
  */
 public class MainMenuScreen implements Screen, InputProcessor {
     private SolitaireApp game;
 
     private Sprite back;
 
-    public MainMenuScreen(SolitaireApp game) {
+    MainMenuScreen(SolitaireApp game) {
         this.game = game;
     }
 
@@ -34,7 +34,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         game.getBatch().setProjectionMatrix(game.getCamera().combined);
         game.getBatch().begin();
         back.draw(game.getBatch());
-        //TODO - Draw: "Click the deck to start..."
+        game.getFont48().draw(game.getBatch(), "Click the deck to start...", 20f, 60f);
         game.getBatch().end();
     }
 
