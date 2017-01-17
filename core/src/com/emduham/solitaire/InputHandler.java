@@ -200,12 +200,12 @@ class InputHandler implements InputProcessor {
             gameScreen.handleClick();
         }
 
-        //Flip 3 cards from stock, or replenish stock
-        if (gameScreen.getBounds(CardPosition.STOCK).contains(vec.x, vec.y)) {
-            gameScreen.discard3();
-        }
-
-        if (gameScreen.getDragging()) {
+        if (!gameScreen.getDragging()) {
+            //Flip 3 cards from stock, or replenish stock
+            if (gameScreen.getBounds(CardPosition.STOCK).contains(vec.x, vec.y)) {
+                gameScreen.discard3();
+            }
+        } else {
             gameScreen.stopDragging(vec.x, vec.y, isClick);
             gameScreen.flipLastRowCards();
         }
