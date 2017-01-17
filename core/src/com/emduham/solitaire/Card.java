@@ -2,6 +2,7 @@ package com.emduham.solitaire;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Evan on 1/10/2017.
@@ -33,6 +34,14 @@ class Card {
         } else {
             back.setPosition(x, y);
             back.draw(batch);
+        }
+    }
+
+    Vector2 getPosition() {
+        if (faceUp) {
+            return new Vector2(front.getX(), front.getY());
+        } else {
+            return new Vector2(back.getX(), back.getY());
         }
     }
 
