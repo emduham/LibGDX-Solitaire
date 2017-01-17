@@ -828,6 +828,17 @@ class GameScreen implements Screen {
                     }
                     break;
                 default:
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (!(rows.get(i).isEmpty())) {
+                            if (isValid(rows.get(i).get(rows.get(i).size() - 1), cardBuffer.get(0))) {
+                                index = i;
+                            }
+                        } else {
+                            if (cardBuffer.get(0).getRank() == 13) {
+                                index = i;
+                            }
+                        }
+                    }
                     break;
             }
 
