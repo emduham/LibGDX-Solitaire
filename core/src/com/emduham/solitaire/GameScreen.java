@@ -121,6 +121,9 @@ class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (isFinished()) {
+            game.setScreen(new MainMenuScreen(game, true, getDeltaTime()));
+        }
         game.getBatch().setProjectionMatrix(game.getCamera().combined);
         game.getBatch().begin();
         //Draw Stock
@@ -227,6 +230,7 @@ class GameScreen implements Screen {
         } else {
             game.getFont16().draw(game.getBatch(), "(A)utocomplete: No", 10f, 50f);
         }
+        game.getFont16().draw(game.getBatch(), "(R)estart?", 10f, 80f);
         game.getBatch().end();
     }
 
@@ -460,7 +464,7 @@ class GameScreen implements Screen {
         return dragging;
     }
 
-    float getDeltaTime() {
+    private float getDeltaTime() {
         return TimeUtils.timeSinceMillis(startMillis) / 1000f;
     }
 
@@ -807,7 +811,7 @@ class GameScreen implements Screen {
         }
     }
 
-    boolean isFinished() {
+    private boolean isFinished() {
         if (hearts.size() == 13) {
             if (diamonds.size() == 13) {
                 if (spades.size() == 13) {

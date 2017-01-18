@@ -23,7 +23,7 @@ class InputHandler implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.R) {
-            gameScreen.getGame().setScreen(new GameScreen(gameScreen.getGame()));
+            gameScreen.getGame().setScreen(new MainMenuScreen(gameScreen.getGame(), false, null));
             return true;
         }
 
@@ -242,11 +242,6 @@ class InputHandler implements InputProcessor {
         } else {
             gameScreen.stopDragging(vec.x, vec.y, this.isClick);
             gameScreen.flipLastRowCards();
-        }
-
-        if (gameScreen.isFinished()) {
-            gameScreen.getGame().setScreen(new MainMenuScreen(gameScreen.getGame(), true, gameScreen.getDeltaTime()));
-            return true;
         }
 
         return true;
