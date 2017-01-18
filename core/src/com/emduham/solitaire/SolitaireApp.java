@@ -39,7 +39,7 @@ public class SolitaireApp extends Game {
         font48.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font16.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        setScreen(new MainMenuScreen(this));
+        setScreen(new MainMenuScreen(this, false, null));
     }
 
     @Override

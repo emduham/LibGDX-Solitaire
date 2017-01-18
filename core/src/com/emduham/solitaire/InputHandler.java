@@ -27,6 +27,11 @@ class InputHandler implements InputProcessor {
             return true;
         }
 
+        if (keycode == Input.Keys.A) {
+            gameScreen.toggleAutocomplete();
+            return true;
+        }
+
         return false;
     }
 
@@ -240,7 +245,7 @@ class InputHandler implements InputProcessor {
         }
 
         if (gameScreen.isFinished()) {
-            gameScreen.getGame().setScreen(new GameScreen(gameScreen.getGame()));
+            gameScreen.getGame().setScreen(new MainMenuScreen(gameScreen.getGame(), true, gameScreen.getDeltaTime()));
             return true;
         }
 

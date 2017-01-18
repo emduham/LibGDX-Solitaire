@@ -51,6 +51,8 @@ class GameScreen implements Screen {
     private List<CardTranslation> translations;
     private List<Card> translationBuffer;
 
+    private boolean autocomplete;
+
     GameScreen(SolitaireApp game) {
         this.game = game;
 
@@ -76,6 +78,8 @@ class GameScreen implements Screen {
 
         translations = new ArrayList<CardTranslation>();
         translationBuffer = new ArrayList<Card>();
+
+        autocomplete = false;
     }
 
     private void initCards() {
@@ -217,11 +221,13 @@ class GameScreen implements Screen {
         //Draw delta time in seconds
         float deltaTime = TimeUtils.timeSinceMillis(startMillis) / 1000f;
         game.getFont16().draw(game.getBatch(), "Time: " + deltaTime, 10f, 20f);
-        game.getBatch().end();
-
-        if (!dragging) {
+        if (!dragging && autocomplete) {
+            game.getFont16().draw(game.getBatch(), "(A)utocomplete: Yes", 10f, 50f);
             autoPlaceFinalPiles();
+        } else {
+            game.getFont16().draw(game.getBatch(), "(A)utocomplete: No", 10f, 50f);
         }
+        game.getBatch().end();
     }
 
     private void autoPlaceFinalPiles() {
@@ -454,6 +460,10 @@ class GameScreen implements Screen {
         return dragging;
     }
 
+    float getDeltaTime() {
+        return TimeUtils.timeSinceMillis(startMillis) / 1000f;
+    }
+
     void setCardBufferLocation(float x, float y) {
         cardBufferLocation.set(x, y);
     }
@@ -473,16 +483,24 @@ class GameScreen implements Screen {
 
         switch (finalPile) {
             case SPADES:
-                cardBuffer.add(spades.remove(spades.size() - 1));
+                if (!spades.isEmpty()) {
+                    cardBuffer.add(spades.remove(spades.size() - 1));
+                }
                 break;
             case CLUBS:
-                cardBuffer.add(clubs.remove(clubs.size() - 1));
+                if (!clubs.isEmpty()) {
+                    cardBuffer.add(clubs.remove(clubs.size() - 1));
+                }
                 break;
             case HEARTS:
-                cardBuffer.add(hearts.remove(hearts.size() - 1));
+                if (!hearts.isEmpty()) {
+                    cardBuffer.add(hearts.remove(hearts.size() - 1));
+                }
                 break;
             case DIAMONDS:
-                cardBuffer.add(diamonds.remove(diamonds.size() - 1));
+                if (!diamonds.isEmpty()) {
+                    cardBuffer.add(diamonds.remove(diamonds.size() - 1));
+                }
                 break;
             default:
                 break;
@@ -655,21 +673,25 @@ class GameScreen implements Screen {
                 }
             }
         }
-        if (rows.get(index).isEmpty()) {
-            if (cardBuffer.get(0).getRank() == 13) {
-                rows.get(index).addAll(cardBuffer);
-                cardBuffer.clear();
-            } else {
-                replaceBufferAtOld();
+        if (!cardBuffer.isEmpty()) {
+            if (rows.get(index).isEmpty()) {
+                if (cardBuffer.get(0).getRank() == 13) {
+                    rows.get(index).addAll(cardBuffer);
+                    cardBuffer.clear();
+                } else {
+                    replaceBufferAtOld();
 //                return;
-            }
-        } else {
-            if (isValid(rows.get(index).get(rows.get(index).size() - 1), cardBuffer.get(0))) {
-                rows.get(index).addAll(cardBuffer);
-                cardBuffer.clear();
+                }
             } else {
-                replaceBufferAtOld();
+                if (isValid(rows.get(index).get(
+                        rows.get(index).size() - 1),
+                        cardBuffer.get(0))) {
+                    rows.get(index).addAll(cardBuffer);
+                    cardBuffer.clear();
+                } else {
+                    replaceBufferAtOld();
 //                return;
+                }
             }
         }
     }
@@ -1074,5 +1096,9 @@ class GameScreen implements Screen {
             default:
                 break;
         }
+    }
+
+    void toggleAutocomplete() {
+        autocomplete = !autocomplete;
     }
 }

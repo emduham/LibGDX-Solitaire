@@ -15,11 +15,15 @@ import com.badlogic.gdx.math.Vector3;
  */
 class MainMenuScreen implements Screen, InputProcessor {
     private final SolitaireApp game;
+    private boolean newGamePlus;
+    private Float time;
 
     private Sprite back;
 
-    MainMenuScreen(SolitaireApp game) {
+    MainMenuScreen(SolitaireApp game, boolean newGamePlus, Float time) {
         this.game = game;
+        this.newGamePlus = newGamePlus;
+        this.time = time;
     }
 
     @Override
@@ -34,6 +38,9 @@ class MainMenuScreen implements Screen, InputProcessor {
         game.getBatch().setProjectionMatrix(game.getCamera().combined);
         game.getBatch().begin();
         back.draw(game.getBatch());
+        if (newGamePlus) {
+            game.getFont48().draw(game.getBatch(), "You did good in " + time + " seconds!", 20f, 120f);
+        }
         game.getFont48().draw(game.getBatch(), "Click the deck to start...", 20f, 60f);
         game.getBatch().end();
     }
