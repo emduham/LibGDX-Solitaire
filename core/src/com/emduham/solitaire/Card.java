@@ -1,7 +1,7 @@
 package com.emduham.solitaire;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -27,7 +27,7 @@ class Card {
         faceUp = !faceUp;
     }
 
-    void draw(SpriteBatch batch, float x, float y) {
+    void draw(Batch batch, float x, float y) {
         if (faceUp) {
             front.setPosition(x, y);
             front.draw(batch);

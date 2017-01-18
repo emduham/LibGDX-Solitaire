@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -47,6 +48,9 @@ class GameScreen implements Screen {
 
     private long startMillis;
 
+    private List<CardTranslation> translations;
+    private List<Card> translationBuffer;
+
     GameScreen(SolitaireApp game) {
         this.game = game;
 
@@ -69,6 +73,9 @@ class GameScreen implements Screen {
         cardBuffer = new ArrayList<Card>();
         cardBufferLocation = new Vector2(0f, 0f);
         dragging = false;
+
+        translations = new ArrayList<CardTranslation>();
+        translationBuffer = new ArrayList<Card>();
     }
 
     private void initCards() {
@@ -194,10 +201,91 @@ class GameScreen implements Screen {
                 yPos -= 30f;
             }
         }
+        //Draw translations
+        Iterator<CardTranslation> translationItr = translations.iterator();
+        while (translationItr.hasNext()) {
+            CardTranslation translation = translationItr.next();
+
+            if (translation.isFinished()) {
+                finishTranslation(translation);
+                translationItr.remove();
+            } else {
+                translation.update(delta);
+                translation.draw(game.getBatch());
+            }
+        }
         //Draw delta time in seconds
         float deltaTime = TimeUtils.timeSinceMillis(startMillis) / 1000f;
         game.getFont16().draw(game.getBatch(), "Time: " + deltaTime, 10f, 20f);
         game.getBatch().end();
+
+        if (!dragging) {
+            autoPlaceFinalPiles();
+        }
+    }
+
+    private void autoPlaceFinalPiles() {
+        //Discard
+        if (!discard.isEmpty()) {
+            switch (discard.get(discard.size() - 1).getSuit()) {
+                case SPADES:
+                    if (discard.get(discard.size() - 1).getRank() == spades.size() + 1) {
+                        translationBuffer.add(discard.remove(discard.size() - 1));
+                        startTranslation(CardPosition.SPADES);
+                    }
+                    break;
+                case HEARTS:
+                    if (discard.get(discard.size() - 1).getRank() == hearts.size() + 1) {
+                        translationBuffer.add(discard.remove(discard.size() - 1));
+                        startTranslation(CardPosition.HEARTS);
+                    }
+                    break;
+                case DIAMONDS:
+                    if (discard.get(discard.size() - 1).getRank() == diamonds.size() + 1) {
+                        translationBuffer.add(discard.remove(discard.size() - 1));
+                        startTranslation(CardPosition.DIAMONDS);
+                    }
+                    break;
+                case CLUBS:
+                    if (discard.get(discard.size() - 1).getRank() == clubs.size() + 1) {
+                        translationBuffer.add(discard.remove(discard.size() - 1));
+                        startTranslation(CardPosition.CLUBS);
+                    }
+                    break;
+            }
+        }
+        //Rows
+        for (List<Card> row : rows) {
+            if (!row.isEmpty()) {
+                switch (row.get(row.size() - 1).getSuit()) {
+                    case SPADES:
+                        if (row.get(row.size() - 1).getRank() == spades.size() + 1) {
+                            translationBuffer.add(row.remove(row.size() - 1));
+                            startTranslation(CardPosition.SPADES);
+                        }
+                        break;
+                    case HEARTS:
+                        if (row.get(row.size() - 1).getRank() == hearts.size() + 1) {
+                            translationBuffer.add(row.remove(row.size() - 1));
+                            startTranslation(CardPosition.HEARTS);
+                        }
+                        break;
+                    case DIAMONDS:
+                        if (row.get(row.size() - 1).getRank() == diamonds.size() + 1) {
+                            translationBuffer.add(row.remove(row.size() - 1));
+                            startTranslation(CardPosition.DIAMONDS);
+                        }
+                        break;
+                    case CLUBS:
+                        if (row.get(row.size() - 1).getRank() == clubs.size() + 1) {
+                            translationBuffer.add(row.remove(row.size() - 1));
+                            startTranslation(CardPosition.CLUBS);
+                        }
+                        break;
+                }
+            }
+        }
+        flipLastRowCards();
     }
 
     @Override
@@ -378,6 +466,27 @@ class GameScreen implements Screen {
         dragging = true;
 
         cardBuffer.add(discard.remove(discard.size() - 1));
+    }
+
+    void startDragFinal(CardPosition finalPile) {
+        dragging = true;
+
+        switch (finalPile) {
+            case SPADES:
+                cardBuffer.add(spades.remove(spades.size() - 1));
+                break;
+            case CLUBS:
+                cardBuffer.add(clubs.remove(clubs.size() - 1));
+                break;
+            case HEARTS:
+                cardBuffer.add(hearts.remove(hearts.size() - 1));
+                break;
+            case DIAMONDS:
+                cardBuffer.add(diamonds.remove(diamonds.size() - 1));
+                break;
+            default:
+                break;
+        }
     }
 
     void stopDragging(float actualX, float actualY, boolean isClick) {
@@ -665,10 +774,12 @@ class GameScreen implements Screen {
     }
 
     void flipLastRowCards() {
-        for (List<Card> row : rows) {
-            if (!(row.isEmpty())) {
-                if (!(row.get(row.size() - 1).isFaceUp())) {
-                    row.get(row.size() - 1).toggleFaceUp();
+        if (!dragging) {
+            for (List<Card> row : rows) {
+                if (!(row.isEmpty())) {
+                    if (!(row.get(row.size() - 1).isFaceUp())) {
+                        row.get(row.size() - 1).toggleFaceUp();
+                    }
                 }
             }
         }
@@ -696,25 +807,25 @@ class GameScreen implements Screen {
                 switch (cardBuffer.get(0).getSuit()) {
                     case SPADES:
                         if (cardBuffer.get(0).getRank() == spades.size() + 1) {
-                            spades.add(cardBuffer.remove(0));
+                            startTranslation(CardPosition.SPADES);
                             return;
                         }
                         break;
                     case HEARTS:
                         if (cardBuffer.get(0).getRank() == hearts.size() + 1) {
-                            hearts.add(cardBuffer.remove(0));
+                            startTranslation(CardPosition.HEARTS);
                             return;
                         }
                         break;
                     case DIAMONDS:
                         if (cardBuffer.get(0).getRank() == diamonds.size() + 1) {
-                            diamonds.add(cardBuffer.remove(0));
+                            startTranslation(CardPosition.DIAMONDS);
                             return;
                         }
                         break;
                     case CLUBS:
                         if (cardBuffer.get(0).getRank() == clubs.size() + 1) {
-                            clubs.add(cardBuffer.remove(0));
+                            startTranslation(CardPosition.CLUBS);
                             return;
                         }
                         break;
@@ -846,8 +957,122 @@ class GameScreen implements Screen {
                 return;
             }
 
-            rows.get(index).addAll(cardBuffer);
+            switch (index) {
+                case 0:
+                    startTranslation(CardPosition.ROW1);
+                    break;
+                case 1:
+                    startTranslation(CardPosition.ROW2);
+                    break;
+                case 2:
+                    startTranslation(CardPosition.ROW3);
+                    break;
+                case 3:
+                    startTranslation(CardPosition.ROW4);
+                    break;
+                case 4:
+                    startTranslation(CardPosition.ROW5);
+                    break;
+                case 5:
+                    startTranslation(CardPosition.ROW6);
+                    break;
+                case 6:
+                    startTranslation(CardPosition.ROW7);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void startTranslation(CardPosition destination) {
+        if (translationBuffer.isEmpty()) {
+            switch (destination) {
+                case SPADES:
+                case CLUBS:
+                case HEARTS:
+                case DIAMONDS:
+                    translations.add(new CardTranslation(cardBuffer, destination, getBounds(destination).x, getBounds(destination).y));
+                    break;
+                case ROW1:
+                case ROW2:
+                case ROW3:
+                case ROW4:
+                case ROW5:
+                case ROW6:
+                case ROW7:
+                    translations.add(new CardTranslation(cardBuffer, destination, getBounds(destination).x, getBounds(destination).y - 30f));
+                    break;
+            }
             cardBuffer.clear();
+        } else {
+            flipTranslationBuffer();
+            switch (destination) {
+                case SPADES:
+                case CLUBS:
+                case HEARTS:
+                case DIAMONDS:
+                    translations.add(new CardTranslation(translationBuffer, destination, getBounds(destination).x, getBounds(destination).y));
+                    break;
+                case ROW1:
+                case ROW2:
+                case ROW3:
+                case ROW4:
+                case ROW5:
+                case ROW6:
+                case ROW7:
+                    translations.add(new CardTranslation(translationBuffer, destination, getBounds(destination).x, getBounds(destination).y - 30f));
+                    break;
+            }
+            translationBuffer.clear();
+        }
+    }
+
+    private void flipTranslationBuffer() {
+        for (Card c : translationBuffer) {
+            if (!c.isFaceUp()) {
+                c.toggleFaceUp();
+            }
+        }
+    }
+
+    private void finishTranslation(CardTranslation translation) {
+        switch (translation.getDestination()) {
+            case SPADES:
+                spades.addAll(translation.getCards());
+                break;
+            case CLUBS:
+                clubs.addAll(translation.getCards());
+                break;
+            case HEARTS:
+                hearts.addAll(translation.getCards());
+                break;
+            case DIAMONDS:
+                diamonds.addAll(translation.getCards());
+                break;
+            case ROW1:
+                rows.get(0).addAll(translation.getCards());
+                break;
+            case ROW2:
+                rows.get(1).addAll(translation.getCards());
+                break;
+            case ROW3:
+                rows.get(2).addAll(translation.getCards());
+                break;
+            case ROW4:
+                rows.get(3).addAll(translation.getCards());
+                break;
+            case ROW5:
+                rows.get(4).addAll(translation.getCards());
+                break;
+            case ROW6:
+                rows.get(5).addAll(translation.getCards());
+                break;
+            case ROW7:
+                rows.get(6).addAll(translation.getCards());
+                break;
+            default:
+                break;
         }
     }
 }

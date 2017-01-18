@@ -1,8 +1,9 @@
 package com.emduham.solitaire;
 
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,29 +14,60 @@ import java.util.List;
  * Pass card(s) back to GameScreen
  */
 class CardTranslation {
-    private static final float RATE = 30f;
+    private static final float SPEED = 1280f;
 
     private List<Card> cards;
+    private CardPosition destination;
+    private Vector2 start;
     private Vector2 dest;
     private Vector2 loc;
-    private Vector2 speed;
+    private Vector2 direction;
+    private float distance;
+    private boolean moving;
 
-    CardTranslation(List<Card> cards, float destX, float destY) {
-        this.cards = cards;
+    CardTranslation(List<Card> cards, CardPosition destination, float destX, float destY) {
+        this.cards = new ArrayList<Card>(cards);
+        this.destination = destination;
         this.dest = new Vector2(destX, destY);
 
         this.loc = this.cards.get(0).getPosition();
+        this.start = loc.cpy();
 
-        float theta = dest.angleRad(loc);
+        distance = start.dst(dest);
 
-        speed = new Vector2(RATE * MathUtils.sin(theta), RATE * MathUtils.cos(theta));
+        direction = new Vector2(dest.sub(loc)).nor();
+
+        moving = true;
+    }
+
+    void update(float delta) {
+        if (moving) {
+            //loc.add(direction.x * SPEED * delta, direction.y * SPEED * delta);
+            loc.add(direction.cpy().scl(SPEED).scl(delta));
+            if (start.dst(loc) >= distance) {
+                loc.set(dest.x, dest.y);
+                moving = false;
+            }
+        }
+    }
+
+    void draw(Batch batch) {
+        float tempY = loc.y;
+        for (Card c : cards) {
+            c.draw(batch, loc.x, tempY);
+            tempY -= 30f;
+        }
     }
 
     boolean isFinished() {
-        if (loc.dst(dest) < RATE) {
-            return true;
-        } else {
-            return false;
-        }
+        return !moving;
+    }
+
+    List<Card> getCards() {
+        return cards;
+    }
+
+    CardPosition getDestination() {
+        return destination;
     }
 }

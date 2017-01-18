@@ -59,6 +59,34 @@ class InputHandler implements InputProcessor {
             return true;
         }
 
+        if (!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.SPADES).contains(vec.x, vec.y)) {
+            gameScreen.setFailedDragPos(CardPosition.SPADES);
+            gameScreen.startDragFinal(CardPosition.SPADES);
+            //Don't need click detection, no auto-place for final piles
+            return true;
+        }
+
+        if (!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.CLUBS).contains(vec.x, vec.y)) {
+            gameScreen.setFailedDragPos(CardPosition.CLUBS);
+            gameScreen.startDragFinal(CardPosition.CLUBS);
+            //Don't need click detection, no auto-place for final piles
+            return true;
+        }
+
+        if (!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.HEARTS).contains(vec.x, vec.y)) {
+            gameScreen.setFailedDragPos(CardPosition.DIAMONDS);
+            gameScreen.startDragFinal(CardPosition.DIAMONDS);
+            //Don't need click detection, no auto-place for final piles
+            return true;
+        }
+
+        if (!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.DIAMONDS).contains(vec.x, vec.y)) {
+            gameScreen.setFailedDragPos(CardPosition.DIAMONDS);
+            gameScreen.startDragFinal(CardPosition.DIAMONDS);
+            //Don't need click detection, no auto-place for final piles
+            return true;
+        }
+
         if (!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.ROW1).contains(vec.x, vec.y)) {
             gameScreen.setFailedDragPos(CardPosition.ROW1);
             int index = gameScreen.getRows().get(0).size() - 1;
@@ -198,6 +226,7 @@ class InputHandler implements InputProcessor {
         boolean isClick = this.isClick;
         if (isClick) {
             gameScreen.handleClick();
+            this.isClick = false;
         }
 
         if (!gameScreen.getDragging()) {
@@ -206,7 +235,7 @@ class InputHandler implements InputProcessor {
                 gameScreen.discard3();
             }
         } else {
-            gameScreen.stopDragging(vec.x, vec.y, isClick);
+            gameScreen.stopDragging(vec.x, vec.y, this.isClick);
             gameScreen.flipLastRowCards();
         }
 
