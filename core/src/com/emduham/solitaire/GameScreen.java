@@ -25,7 +25,7 @@ class GameScreen implements Screen {
     //game to setScreen(), batch, camera, etc...
     private final SolitaireApp game;
 
-    private TextureAtlas deckImgs;
+    private TextureAtlas deckImages;
     private ShapeRenderer shapeRenderer;
 
     //Stock Positions
@@ -85,16 +85,16 @@ class GameScreen implements Screen {
     private void initCards() {
         //Create 52 card deck in stock
         for (int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("spades", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.SPADES, i));
+            stock.add(new Card(deckImages.createSprite("spades", i), deckImages.createSprite("back", SolitaireApp.BACK), Suit.SPADES, i));
         }
         for (int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("clubs", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.CLUBS, i));
+            stock.add(new Card(deckImages.createSprite("clubs", i), deckImages.createSprite("back", SolitaireApp.BACK), Suit.CLUBS, i));
         }
         for (int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("diamonds", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.DIAMONDS, i));
+            stock.add(new Card(deckImages.createSprite("diamonds", i), deckImages.createSprite("back", SolitaireApp.BACK), Suit.DIAMONDS, i));
         }
         for (int i = 1; i <= 13; i++) {
-            stock.add(new Card(deckImgs.createSprite("hearts", i), deckImgs.createSprite("back", SolitaireApp.BACK), Suit.HEARTS, i));
+            stock.add(new Card(deckImages.createSprite("hearts", i), deckImages.createSprite("back", SolitaireApp.BACK), Suit.HEARTS, i));
         }
 
         //Shuffle the stock
@@ -114,7 +114,7 @@ class GameScreen implements Screen {
     public void show() {
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(new InputHandler(this));
-        deckImgs = new TextureAtlas("resizedcarddeck.pack"); //Cards are 115x159
+        deckImages = new TextureAtlas("resizedcarddeck.pack"); //Cards are 115x159
         initCards();
         startMillis = TimeUtils.millis();
     }
@@ -131,7 +131,7 @@ class GameScreen implements Screen {
             stock.get(0).getBack().setPosition(10f, 550f);
             stock.get(0).getBack().draw(game.getBatch());
         } else {
-            Sprite fadedBack = deckImgs.createSprite("back", SolitaireApp.BACK);
+            Sprite fadedBack = deckImages.createSprite("back", SolitaireApp.BACK);
             fadedBack.setPosition(10f, 550f);
             fadedBack.setAlpha(0.4f);
             fadedBack.draw(game.getBatch());
@@ -151,7 +151,7 @@ class GameScreen implements Screen {
         if (!spades.isEmpty()) {
             spades.get(spades.size() - 1).draw(game.getBatch(), 700f, 550f);
         } else {
-            Sprite fadedAce = deckImgs.createSprite("spades", 1);
+            Sprite fadedAce = deckImages.createSprite("spades", 1);
             fadedAce.setAlpha(0.2f);
             fadedAce.setPosition(700f, 550f);
             fadedAce.draw(game.getBatch());
@@ -159,7 +159,7 @@ class GameScreen implements Screen {
         if (!clubs.isEmpty()) {
             clubs.get(clubs.size() - 1).draw(game.getBatch(), 850f, 550f);
         } else {
-            Sprite fadedAce = deckImgs.createSprite("clubs", 1);
+            Sprite fadedAce = deckImages.createSprite("clubs", 1);
             fadedAce.setAlpha(0.2f);
             fadedAce.setPosition(850f, 550f);
             fadedAce.draw(game.getBatch());
@@ -167,7 +167,7 @@ class GameScreen implements Screen {
         if (!hearts.isEmpty()) {
             hearts.get(hearts.size() - 1).draw(game.getBatch(), 1000f, 550f);
         } else {
-            Sprite fadedAce = deckImgs.createSprite("hearts", 1);
+            Sprite fadedAce = deckImages.createSprite("hearts", 1);
             fadedAce.setAlpha(0.2f);
             fadedAce.setPosition(1000f, 550f);
             fadedAce.draw(game.getBatch());
@@ -175,7 +175,7 @@ class GameScreen implements Screen {
         if (!diamonds.isEmpty()) {
             diamonds.get(diamonds.size() - 1).draw(game.getBatch(), 1150f, 550f);
         } else {
-            Sprite fadedAce = deckImgs.createSprite("diamonds", 1);
+            Sprite fadedAce = deckImages.createSprite("diamonds", 1);
             fadedAce.setAlpha(0.2f);
             fadedAce.setPosition(1150f, 550f);
             fadedAce.draw(game.getBatch());
@@ -190,7 +190,7 @@ class GameScreen implements Screen {
                     yPos -= 30f;
                 }
             } else {
-                Sprite fadedBackRow = deckImgs.createSprite("back", SolitaireApp.BACK);
+                Sprite fadedBackRow = deckImages.createSprite("back", SolitaireApp.BACK);
                 fadedBackRow.setAlpha(0.5f);
                 fadedBackRow.setPosition(xPos, yPos);
                 fadedBackRow.draw(game.getBatch());
@@ -317,7 +317,7 @@ class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        deckImgs.dispose();
+        deckImages.dispose();
         shapeRenderer.dispose();
     }
 

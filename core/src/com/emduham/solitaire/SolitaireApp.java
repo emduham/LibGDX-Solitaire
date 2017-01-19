@@ -2,6 +2,7 @@ package com.emduham.solitaire;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,7 +33,9 @@ public class SolitaireApp extends Game {
         parameter.borderWidth = 1.5f;
         parameter.size = 48;
         font48 = generator.generateFont(parameter);
-        parameter.borderWidth = 0.8f;
+        parameter.color = Color.BLACK;
+        parameter.borderColor = Color.WHITE;
+        parameter.gamma = 0.7f;
         parameter.size = 16;
         font16 = generator.generateFont(parameter);
         generator.dispose();
