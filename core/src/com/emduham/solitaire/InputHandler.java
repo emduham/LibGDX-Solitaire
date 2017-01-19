@@ -79,8 +79,8 @@ class InputHandler implements InputProcessor {
         }
 
         if (!gameScreen.getDragging() && gameScreen.getBounds(CardPosition.HEARTS).contains(vec.x, vec.y)) {
-            gameScreen.setFailedDragPos(CardPosition.DIAMONDS);
-            gameScreen.startDragFinal(CardPosition.DIAMONDS);
+            gameScreen.setFailedDragPos(CardPosition.HEARTS);
+            gameScreen.startDragFinal(CardPosition.HEARTS);
             //Don't need click detection, no auto-place for final piles
             return true;
         }
