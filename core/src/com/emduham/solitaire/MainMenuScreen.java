@@ -40,8 +40,10 @@ class MainMenuScreen implements Screen, InputProcessor {
         back.draw(game.getBatch());
         if (newGamePlus) {
             game.getFont48().draw(game.getBatch(), "You did good in " + time + " seconds!", 20f, 120f);
+            game.getFont48().draw(game.getBatch(), "Click the deck to restart...", 20f, 60f);
+        } else {
+            game.getFont48().draw(game.getBatch(), "Click the deck to start...", 20f, 60f);
         }
-        game.getFont48().draw(game.getBatch(), "Click the deck to start...", 20f, 60f);
         game.getBatch().end();
     }
 
