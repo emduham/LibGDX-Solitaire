@@ -24,25 +24,20 @@ import java.util.List;
 class GameScreen implements Screen {
     //game to setScreen(), batch, camera, etc...
     private final SolitaireApp game;
-
-    private TextureAtlas deckImages;
-    private ShapeRenderer shapeRenderer;
-
     //Stock Positions
     private final ArrayList<Card> stock;
     private final ArrayList<Card> discard;
-
     //Final Positions
     private final ArrayList<Card> spades;
     private final ArrayList<Card> clubs;
     private final ArrayList<Card> diamonds;
     private final ArrayList<Card> hearts;
-
     //Row Positions
     private final List<List<Card>> rows;
-
     private final ArrayList<Card> cardBuffer;
     private final Vector2 cardBufferLocation;
+    private TextureAtlas deckImages;
+    private ShapeRenderer shapeRenderer;
     private boolean dragging;
     private CardPosition failedDragPos;
 
